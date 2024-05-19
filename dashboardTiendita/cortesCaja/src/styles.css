@@ -1,0 +1,10 @@
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    overflow-x: hidden;
+    
+    background: rgb(255, 255, 255);
+    height: 150%;
+ }

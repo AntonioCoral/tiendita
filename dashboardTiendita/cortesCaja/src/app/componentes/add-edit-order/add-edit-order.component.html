@@ -1,0 +1,81 @@
+<app-progress-bar *ngIf="loading"></app-progress-bar>
+<div *ngIf="!loading" class="row mt-1">
+    <div class="col-lg-4 offset-lg-4">
+        <div class="card bg-secondary mb-3" style="max-width: 25rem;">
+            <div class="card-header text-center">{{ operacion }} orden</div>
+            <div class="card-body">
+                <div class="form">
+                    <form [formGroup]="form" (ngSubmit)="addOrden()">
+                        <fieldset>
+                            <div>
+                              <label for="client" class="form-label mt-2">No.Orden</label>
+                              <input formControlName="numerOrden" type="text" class="form-control" id="numerOrden" aria-describedby="emailHelp" placeholder="Numero de orden">
+                              <span *ngIf="form.get('numerOrden')?.hasError('required')&& form.get('numerOrden')?.touched">
+                                El campo es <strong>requerido</strong>
+                            </span>
+                            </div>
+                            <div>
+                              <label for="numeroCaja" class="form-label mt-2">Caja</label>
+                              <input formControlName="numeroCaja" type="text" class="form-control" id="numeroCaja" aria-describedby="emailHelp" placeholder="Numero de caja">
+                              <span *ngIf="form.get('numeroCaja')?.hasError('required')&& form.get('numeroCaja')?.touched">
+                                El campo es <strong>requerido</strong>
+                            </span>
+                            </div>
+                            <div>
+                                <label for="client" class="form-label mt-2">Cliente</label>
+                                <input formControlName="nameClient" type="text" class="form-control" id="nameClient" aria-describedby="emailHelp" placeholder="Nombre del cliente">
+                                <span *ngIf="form.get('nameClient')?.hasError('required')&& form.get('nameClient')?.touched">
+                                    El campo es <strong>requerido</strong>
+                                </span>
+                              </div>
+                            <div>
+                              <label for="client" class="form-label mt-2">Direction</label>
+                              <input formControlName="direction" type="text" class="form-control" id="direction" aria-describedby="emailHelp" placeholder="Dirección">
+                              <span *ngIf="form.get('direction')?.hasError('required')&& form.get('direction')?.touched">
+                                El campo es <strong>requerido</strong>
+                            </span>
+                            </div>
+                            <div>
+                              <label for="client" class="form-label mt-2">Monto compra</label>
+                              <input formControlName="montoCompra" type="text" class="form-control" id="montoCompra" aria-describedby="emailHelp" placeholder="Monto de compra">
+                              <span *ngIf="form.get('montoCompra')?.hasError('required')&& form.get('montoCompra')?.touched">
+                                El campo es <strong>requerido</strong>
+                            </span>
+                            </div>
+                            <div>
+                              <label for="client" class="form-label mt-2">Efectivo</label>
+                              <input formControlName="efectivo" type="text" class="form-control" id="efectivo" aria-describedby="emailHelp" placeholder="Cuanto paga en efectivo">
+                              <span *ngIf="form.get('efectivo')?.hasError('required')&& form.get('efectivo')?.touched">
+                                El campo es <strong>requerido</strong>
+                            </span>
+                            </div>
+                            <div>
+                                <label for="client" class="form-label mt-2">Transferencia</label>
+                                <input formControlName="transferenciaPay" type="text" class="form-control" id="transferenciaPay" aria-describedby="emailHelp" placeholder="Cuanto paga transferencia">
+                                <span *ngIf="form.get('transferenciaPay')?.hasError('required')&& form.get('transferenciaPay')?.touched">
+                                    El campo es <strong>requerido</strong>
+                                </span>
+                            </div>
+                            <div>
+                                <label for="client" class="form-label mt-2">Servicio</label>
+                                <input formControlName="recharge" type="text" class="form-control" id="recharge" aria-describedby="emailHelp" placeholder="Recarga">
+                                <span *ngIf="form.get('recharge')?.hasError('required')&& form.get('recharge')?.touched">
+                                    El campo es <strong>requerido</strong>
+                                </span>
+                            </div>
+                            
+                              <div class="row mt-2 text-center">
+                                <div class="col-lg-6">
+                                    <button [disabled]="form.invalid" type="submit" class="btn btn-primary"> {{ operacion }}</button>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    <button routerLink="/list-orders" type="submit" class="btn btn-secondary">Regresar</button>
+                                  </div>
+                              </div>
+                            </fieldset>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

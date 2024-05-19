@@ -1,0 +1,49 @@
+.contenido{ margin-top: 8%; width: 100%;}
+
+.contenido_tittle { 
+  font-size: 78px; 
+  color: rgb(255, 255, 255); 
+  font-family: 'Bebas Neue', cursive;
+  
+}
+
+ ul li{
+  color: #ffffff;
+ }
+ .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .logo {
+    flex: 1; /* El logo ocupará el 50% del espacio disponible */
+    padding: 20px;
+  }
+  
+  .logo img {
+    max-width: 50%;
+  }
+  
+  .card {
+    flex: 1; /* El card ocupará el 50% del espacio disponible */
+    height: 300px;
+    width: 50%;
+    background-color: white;
+  }
+  
+  .card-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  

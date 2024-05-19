@@ -1,0 +1,66 @@
+<app-progress-bar *ngIf="loading"></app-progress-bar>
+
+<div *ngIf="!loading" class="container">
+    <div class="title">
+        <h2>ORDENES</h2>
+        <button type="button" class="btn btn-danger" routerLink="/add">Agregar orden</button>
+    </div>
+<div class="form">
+  <table *ngIf="listOrder.length > 0" class="table table-hover table-primary">
+    <thead>
+      <tr>
+        <th scope="col">N.</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Caja</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Direccion</th>
+        <th scope="col">Total</th>
+        <th scope="col">Transferencia</th>
+        <th scope="col">Efectivo</th>
+        <th scope="col">Repartidor</th>
+        <th scope="col">Servicio</th>
+        <th scope="col">Estatus</th>
+        <th></th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of listOrder" class="table-secondary">
+        
+        <td>{{item.numerOrden}}</td>
+        <td>{{item.createdAt ? (item.createdAt | date: 'short') : 'N/A' }}</td>
+        <td>{{item.numeroCaja}}</td>
+        <td>{{item.nameClient}}</td>
+        <td>{{item.direction}}</td>
+        <td>{{item.montoCompra | currency}}</td>
+        <td>{{item.transferenciaPay | currency}}</td>
+        <td>{{item.efectivo | currency}}</td>
+        <td>
+          <input 
+            *ngIf="item.id !== undefined" 
+            type="text" 
+            class="form-control" 
+            placeholder={{item.nameDelivery}}
+            id="repartidor"
+            (keyup.enter)="updateRepartidor(item.id, getInputValue($event))">            
+        </td>
+       <td>{{item.recharge}}</td>
+       <td>
+        <input 
+            *ngIf="item.id !== undefined" 
+            type="text" 
+            class="form-control" 
+            placeholder={{item.status}}
+            id="status"
+            (keyup.enter)="updateEstadoPedido(item.id, getInputValue($event))">
+        <td>
+            <button type="button" class="btn btn-info btn-sm " routerLink="/edit/{{ item.id }}">Edit</button>
+            <button (click)="deleteOrden(item.id!)" type="button" class="btn btn-secondary btn-sm ms-7">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 *ngIf="listOrder.length == 0" >No hay ordenes</h5>
+</div>
+   
+</div>

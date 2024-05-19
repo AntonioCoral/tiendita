@@ -1,0 +1,51 @@
+.contenido{ margin-top: 8%; width: 100%;}
+
+.contenido_tittle { 
+  font-size: 78px; 
+  color: rgb(255, 255, 255); 
+  font-family: 'Bebas Neue', cursive;
+  
+}
+
+.contenido_instruction{
+  font-size: 25px; 
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+}
+.contenido_first{
+  font-size: 18px; 
+  font-weight: bold;
+  margin-top: 35px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  
+}
+
+.contenido_two{
+  font-size: 18px; 
+  font-weight: bold;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+}
+
+ .marca{
+  margin-top: 100px;
+ }
+
+ ul li{
+  color: #ffffff;
+ }
+
+.carta{
+  height: 400px;
+  width: 100%;
+  background-color: #a08916;
+  
+}
+.img-back{
+  height: auto;
+  width: 100%;
+}
+
