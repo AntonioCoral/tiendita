@@ -38,18 +38,21 @@ const getOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getOrden = getOrden;
 const deleteOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const io = req.app.get('socketio');
     const orden = yield orden_1.default.findByPk(id);
     if (!orden) {
         res.status(404).json({ msg: 'No existe usuario con la id: ' + id });
     }
     else {
         yield orden.destroy();
+        io.emit('orderDeleted', id); // Emitir evento de orden eliminada
         res.status(200).json({ msg: 'El usuario ha sido eliminado exitosamente' });
     }
 });
 exports.deleteOrden = deleteOrden;
-const postOrden = (req, res, io) => __awaiter(void 0, void 0, void 0, function* () {
+const postOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
+    const io = req.app.get('socketio');
     try {
         const newOrder = yield orden_1.default.create(body);
         io.emit('orderAdded', newOrder); // Emitir evento de orden agregada
@@ -61,9 +64,10 @@ const postOrden = (req, res, io) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.postOrden = postOrden;
-const updateOrden = (req, res, io) => __awaiter(void 0, void 0, void 0, function* () {
+const updateOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     const { id } = req.params;
+    const io = req.app.get('socketio');
     try {
         const orden = yield orden_1.default.findByPk(id);
         if (orden) {

@@ -26,18 +26,21 @@ export const getOrden = async (req: Request, res: Response) => {
 
 export const deleteOrden = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const io: SocketIOServer = req.app.get('socketio');
     const orden = await Orden.findByPk(id);
 
     if (!orden) {
         res.status(404).json({ msg: 'No existe usuario con la id: ' + id });
     } else {
         await orden.destroy();
+        io.emit('orderDeleted', id); // Emitir evento de orden eliminada
         res.status(200).json({ msg: 'El usuario ha sido eliminado exitosamente' });
     }
 };
 
-export const postOrden = async (req: Request, res: Response, io: SocketIOServer) => {
+export const postOrden = async (req: Request, res: Response) => {
     const { body } = req;
+    const io: SocketIOServer = req.app.get('socketio');
 
     try {
         const newOrder = await Orden.create(body);
@@ -49,9 +52,10 @@ export const postOrden = async (req: Request, res: Response, io: SocketIOServer)
     }
 };
 
-export const updateOrden = async (req: Request, res: Response, io: SocketIOServer) => {
+export const updateOrden = async (req: Request, res: Response) => {
     const { body } = req;
     const { id } = req.params;
+    const io: SocketIOServer = req.app.get('socketio');
 
     try {
         const orden = await Orden.findByPk(id);

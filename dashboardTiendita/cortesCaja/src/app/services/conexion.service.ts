@@ -11,7 +11,21 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io(environment.endpoint);
+    this.socket = io(environment.endpoint, {
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+    });
+
+    this.socket.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
   }
 
   onOrderAdded(): Observable<Order> {
@@ -22,9 +36,24 @@ export class SocketService {
     });
   }
 
-  disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
+  onOrderUpdated(): Observable<Order> {
+    return new Observable<Order>(observer => {
+      this.socket.on('orderUpdated', (order: Order) => {
+        observer.next(order);
+      });
+    });
   }
+
+  onOrderDeleted(): Observable<number> {
+    return new Observable<number>(observer => {
+      this.socket.on('orderDeleted', (id: number) => {
+        observer.next(id);
+      });
+    });
+  }
+  emitOrderAdded(order: Order) {
+    this.socket.emit('orderAdded', order);
+  }
+
+
 }

@@ -26,6 +26,9 @@ class Server {
             },
         });
 
+        // Agregar io al contexto de la aplicación
+        this.app.set('socketio', this.io);
+
         this.listen();
         this.middlewares();
         this.routes();

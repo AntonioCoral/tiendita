@@ -25,10 +25,12 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getListOrdenes();
     this.listenForNewOrders();
+    this.listenForUpdatedOrders();
+    this.listenForDeletedOrders();
   }
 
   ngOnDestroy(): void {
-    this.socketService.disconnect();
+    
   }
 
   getListOrdenes() {
@@ -52,6 +54,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       order.nameDelivery = repartidor;
       this._orderService.updateOrden(id, order).subscribe(() => {
         console.log(`Repartidor actualizado para la orden ${id}`);
+        this.getListOrdenes(); // Actualizar la lista de órdenes
       });
     });
   }
@@ -64,19 +67,39 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.status = status;
       this._orderService.updateOrden(id, order).subscribe(() => {
-        console.log('Estatus actualizado')
+        console.log('Estatus actualizado');
+        this.getListOrdenes(); // Actualizar la lista de órdenes
       });
     });
   }
 
-  getInputValuee(event: Event): string {
-    return (event.target as HTMLInputElement).value;
-  }
-
   listenForNewOrders() {
     this.socketService.onOrderAdded().subscribe((order: Order) => {
+      console.log('Nueva orden recibida:', order);
       this.listOrder.push(order);
       this.toastr.success('Nueva orden agregada', 'Orden añadida');
     });
   }
+  
+  listenForUpdatedOrders() {
+    this.socketService.onOrderUpdated().subscribe((order: Order) => {
+      console.log('Orden actualizada recibida:', order);
+      const index = this.listOrder.findIndex(o => o.id === order.id);
+      if (index !== -1) {
+        this.listOrder[index] = order;
+      } else {
+        this.listOrder.push(order);
+      }
+      this.toastr.info('Orden actualizada', 'Órdenes actualizadas');
+    });
+  }
+  
+  listenForDeletedOrders() {
+    this.socketService.onOrderDeleted().subscribe((id: number) => {
+      console.log('Orden eliminada recibida:', id);
+      this.listOrder = this.listOrder.filter(order => order.id !== id);
+      this.toastr.warning('Orden eliminada', 'Órdenes actualizadas');
+    });
+  }
+  
 }
