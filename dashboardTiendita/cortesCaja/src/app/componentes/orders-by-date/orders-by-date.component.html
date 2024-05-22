@@ -1,0 +1,20 @@
+<div class="container">
+    <h2>Orders by Date</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="date">Select Date</label>
+        <input type="date" id="date" [(ngModel)]="selectedDate" name="date" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">View Orders</button>
+    </form>
+  
+    <div *ngIf="orders.length > 0">
+      <h3>Orders on {{ selectedDate }}</h3>
+      <ul>
+        <li *ngFor="let order of orders">
+          {{ order.numerOrden }} - {{ order.nameClient }} - {{ order.direction }} - {{ order.efectivo }} - {{ order.montoCompra }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

@@ -33,6 +33,10 @@ const Orden = db.define('Orden', {
     status: {
         type: DataTypes.STRING
     },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      }
 
 }, {
 

@@ -12,8 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
+exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
 const orden_1 = __importDefault(require("../models/orden"));
+const sequelize_1 = require("sequelize");
+const moment_1 = __importDefault(require("moment"));
 const getOrdenes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const listOrden = yield orden_1.default.findAll();
     res.json(listOrden);
@@ -85,3 +87,55 @@ const updateOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.updateOrden = updateOrden;
+const getOrdenesByDelivery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nameDelivery } = req.params;
+    try {
+        const ordenes = yield orden_1.default.findAll({ where: { nameDelivery } });
+        res.json(ordenes);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
+    }
+});
+exports.getOrdenesByDelivery = getOrdenesByDelivery;
+const getOrdenesByDate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { date } = req.params;
+    try {
+        const orders = yield orden_1.default.findAll({
+            where: {
+                createdAt: {
+                    [sequelize_1.Op.gte]: (0, moment_1.default)(date).startOf('day').toDate(),
+                    [sequelize_1.Op.lte]: (0, moment_1.default)(date).endOf('day').toDate()
+                }
+            }
+        });
+        res.json(orders);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching orders' });
+    }
+});
+exports.getOrdenesByDate = getOrdenesByDate;
+const getLastOrderNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { date } = req.params;
+    try {
+        const lastOrder = yield orden_1.default.findOne({
+            where: {
+                createdAt: {
+                    [sequelize_1.Op.gte]: (0, moment_1.default)(date).startOf('day').toDate(),
+                    [sequelize_1.Op.lte]: (0, moment_1.default)(date).endOf('day').toDate()
+                }
+            },
+            order: [['numerOrden', 'DESC']]
+        });
+        const lastOrderNumber = lastOrder ? lastOrder.numerOrden : 0;
+        res.json({ lastOrderNumber });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching last order number' });
+    }
+});
+exports.getLastOrderNumber = getLastOrderNumber;

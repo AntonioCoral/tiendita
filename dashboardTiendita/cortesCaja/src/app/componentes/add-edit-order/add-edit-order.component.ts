@@ -1,35 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Order } from 'src/app/interfaces/order';
 import { OrderService } from 'src/app/services/order.service';
-import { ClienteService } from 'src/app/services/cliente.service';
-import { SocketService } from 'src/app/services/conexion.service';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Order } from 'src/app/interfaces/order';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-add-edit-order',
   templateUrl: './add-edit-order.component.html',
   styleUrls: ['./add-edit-order.component.css']
 })
-export class AddEditOrderComponent {
+export class AddEditOrderComponent implements OnInit {
   form: FormGroup;
   loading: boolean = false;
   id: number;
   operacion: string = 'Agregar ';
-  telefonosAutocompletados: string[];
-  telefonoInput = new Subject<string>();
 
-  constructor(
+  constructor (
     private fb: FormBuilder,
     private _orderService: OrderService,
     private router: Router,
     private toastr: ToastrService,
-    private aRouter: ActivatedRoute,
-    private clienteService: ClienteService,
-    private socketService: SocketService
+    private aRouter: ActivatedRoute
   ) {
     this.form = this.fb.group({
       numerOrden: ['', Validators.required],
@@ -42,21 +35,10 @@ export class AddEditOrderComponent {
       recharge: ['', Validators.required]
     });
     this.id = Number(aRouter.snapshot.paramMap.get('id'));
-    this.telefonosAutocompletados = [];
+  }
 
-    this.telefonoInput.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(telefono => this.clienteService.getCliente(Number(telefono)))
-    ).subscribe(cliente => {
-      if (cliente) {
-        this.telefonosAutocompletados = [cliente.telefono];
-      } else {
-        this.telefonosAutocompletados = [];
-      }
-    });
-
-    if (this.id !== 0) {
+  ngOnInit(): void {
+    if (this.id != 0) {
       this.operacion = 'Editar ';
       this.getOrden(this.id);
     }
@@ -91,23 +73,24 @@ export class AddEditOrderComponent {
       recharge: this.form.value.recharge
     };
 
+    const today = moment().format('YYYY-MM-DD');
+
     if (this.id !== 0) {
       this.loading = true;
-      this.id = this.id;
       this._orderService.updateOrden(this.id, orden).subscribe(() => {
         this.loading = false;
-        this.toastr.success(`La orden de ${orden.nameClient} fue actualizado con exito`);
+        this.toastr.success(`La orden de ${orden.nameClient} fue actualizada con éxito`);
         this.router.navigate(['/list-orders']);
       });
     } else {
       this.loading = true;
-      this._orderService.saveOrder(orden).subscribe(() => {
-        this.loading = false;
-        this.toastr.success(`La orden de ${orden.nameClient} fue registrado con exito`);
-        this.router.navigate(['/list-orders']);
-        
-        // Emitir un evento WebSocket para notificar al servidor sobre la nueva orden agregada
-        this.socketService.emitOrderAdded(orden);
+      this._orderService.getLastOrderNumber(today).subscribe(({ lastOrderNumber }) => {
+        orden.numerOrden = lastOrderNumber + 1;
+        this._orderService.saveOrder(orden).subscribe(() => {
+          this.loading = false;
+          this.toastr.success(`La orden de ${orden.nameClient} fue registrada con éxito`);
+          this.router.navigate(['/list-orders']);
+        });
       });
     }
   }

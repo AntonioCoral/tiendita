@@ -23,6 +23,8 @@ import { ListOrdersComponent } from './componentes/list-orders/list-orders.compo
 import { AddEditOrderComponent } from './componentes/add-edit-order/add-edit-order.component';
 import { ProgressBarComponent } from './shared/progress-bar/progress-bar.component';
 import { DatePipe } from '@angular/common';
+import { DeliveryOrdersComponent } from './componentes/delivery-orders/delivery-orders.component';
+import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-date.component';
 
 
 
@@ -34,7 +36,9 @@ import { DatePipe } from '@angular/common';
     LoginComponent,
     ListOrdersComponent,
     AddEditOrderComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    DeliveryOrdersComponent,
+    OrdersByDateComponent
   ],
   imports: [
     BrowserModule,

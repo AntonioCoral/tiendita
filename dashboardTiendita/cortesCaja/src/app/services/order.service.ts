@@ -23,6 +23,13 @@ export class OrderService {
   getListOrdenes(): Observable<Order[]> {
     return this.http.get<Order[]>(`${this.myAppUrl}${this.myApiUrl}`, { headers: this.headers });
   }
+  getOrdersByDate(date: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.myAppUrl}${this.myApiUrl}date/${date}`);
+  }
+
+  getLastOrderNumber(date: string): Observable<{ lastOrderNumber: number }> {
+    return this.http.get<{ lastOrderNumber: number }>(`${this.myAppUrl}${this.myApiUrl}lastOrderNumber/${date}`);
+  }
 
   deleteOrden(id: number): Observable<void> {
     return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, { headers: this.headers });

@@ -45,6 +45,10 @@ const Orden = conecction_1.default.define('Orden', {
     status: {
         type: sequelize_1.DataTypes.STRING
     },
+    createdAt: {
+        type: sequelize_1.DataTypes.DATE,
+        defaultValue: sequelize_1.DataTypes.NOW
+    }
 }, {
     updateAt: false
 });

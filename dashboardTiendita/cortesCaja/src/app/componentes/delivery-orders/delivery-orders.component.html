@@ -1,0 +1,27 @@
+<div class="container">
+    <h2>Órdenes asignadas a {{ nameDelivery }}</h2>
+    <div *ngIf="orders.length > 0; else noOrders">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Número de Orden</th>
+            <th>Nombre del Cliente</th>
+            <th>Dirección</th>
+            <th>Paga</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.numerOrden }}</td>
+            <td>{{ order.nameClient }}</td>
+            <td>{{ order.direction }}</td>
+            <td>{{ order.montoCompra }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noOrders>
+      <p>No hay órdenes asignadas.</p>
+    </ng-template>
+  </div>
+  
