@@ -76,16 +76,26 @@ export const updateOrden = async (req: Request, res: Response) => {
 };
 
 export const getOrdenesByDelivery = async (req: Request, res: Response) => {
-    const { nameDelivery } = req.params;
-  
-    try {
-      const ordenes = await Orden.findAll({ where: { nameDelivery } });
-      res.json(ordenes);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
-    }
-  };
+  const { nameDelivery } = req.params;
+  const startOfDay = moment().startOf('day').toDate();
+  const endOfDay = moment().endOf('day').toDate();
+
+  try {
+    const ordenes = await Orden.findAll({
+      where: {
+        nameDelivery,
+        createdAt: {
+          [Op.gte]: startOfDay,
+          [Op.lte]: endOfDay
+        }
+      }
+    });
+    res.json(ordenes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
+  }
+};
 
   export const getOrdenesByDate = async (req: Request, res:Response) => {
     const { date } = req.params;

@@ -1,27 +1,30 @@
 <div class="container">
-    <h2>Órdenes asignadas a {{ nameDelivery }}</h2>
-    <div *ngIf="orders.length > 0; else noOrders">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Número de Orden</th>
-            <th>Nombre del Cliente</th>
-            <th>Dirección</th>
-            <th>Paga</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let order of orders">
-            <td>{{ order.numerOrden }}</td>
-            <td>{{ order.nameClient }}</td>
-            <td>{{ order.direction }}</td>
-            <td>{{ order.montoCompra }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <ng-template #noOrders>
-      <p>No hay órdenes asignadas.</p>
-    </ng-template>
+  <h2>Pedidos asignados a {{ nameDelivery }}</h2>
+  <div *ngIf="orders.length > 0">
+    <table class="table table-hover table-primary">
+      <thead>
+        <tr>
+          <th scope="col">Cliente</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Total</th>
+          <th scope="col">Transferencia</th>
+          <th scope="col">Efectivo</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders" class="table-secondary">
+          <td>{{ order.nameClient }}</td>
+          <td>{{ order.direction }}</td>
+          <td>{{ order.montoCompra | currency }}</td>
+          <td>{{ order.transferenciaPay | currency }}</td>
+          <td>{{ order.efectivo | currency }}</td>
+
+        </tr>
+      </tbody>
+    </table>
   </div>
-  
+  <div *ngIf="orders.length === 0">
+    <p>No hay pedidos asignados.</p>
+  </div>
+</div>

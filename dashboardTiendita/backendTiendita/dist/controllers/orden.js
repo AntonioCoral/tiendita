@@ -89,8 +89,18 @@ const updateOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.updateOrden = updateOrden;
 const getOrdenesByDelivery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nameDelivery } = req.params;
+    const startOfDay = (0, moment_1.default)().startOf('day').toDate();
+    const endOfDay = (0, moment_1.default)().endOf('day').toDate();
     try {
-        const ordenes = yield orden_1.default.findAll({ where: { nameDelivery } });
+        const ordenes = yield orden_1.default.findAll({
+            where: {
+                nameDelivery,
+                createdAt: {
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
+                }
+            }
+        });
         res.json(ordenes);
     }
     catch (error) {

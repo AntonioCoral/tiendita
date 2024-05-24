@@ -1,20 +1,67 @@
-<div class="container">
-    <h2>Orders by Date</h2>
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="date">Select Date</label>
-        <input type="date" id="date" [(ngModel)]="selectedDate" name="date" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">View Orders</button>
-    </form>
-  
-    <div *ngIf="orders.length > 0">
-      <h3>Orders on {{ selectedDate }}</h3>
-      <ul>
-        <li *ngFor="let order of orders">
-          {{ order.numerOrden }} - {{ order.nameClient }} - {{ order.direction }} - {{ order.efectivo }} - {{ order.montoCompra }}
-        </li>
-      </ul>
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <img src="./assets/logo2.png" style="width: 90px; height: 60px; margin-left: 5%;">
+    <div class="collapse navbar-collapse" id="navbarColor02">
+    </div>
+ 
+    <button type="button" class="btn btn-outline-info mt-2" 
+    style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 1.5%;" routerLink="/">Login</button>
+
+    <button type="button" class="btn btn-outline-success mt-2" 
+    style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 3%;" routerLink="/list-orders">Ordenes</button>
+
+    <div class="collapse" id="navbarColor02">
     </div>
   </div>
-  
+</nav>
+
+<div class="container">
+  <h2>Reportes</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="date">Elige el día</label>
+      <input type="date" id="date" [(ngModel)]="selectedDate" name="date" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Ver ordenes</button>
+  </form>
+
+  <div *ngIf="orders.length > 0">
+    <h3>Ordenes de: {{ selectedDate }}</h3>
+    <div class="form">
+      <table class="table table-hover table-primary">
+        <thead>
+          <tr>
+            <th scope="col">N.</th>
+            <th scope="col">Hora</th>
+            <th scope="col">Caja</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Direccion</th>
+            <th scope="col">Total</th>
+            <th scope="col">Transferencia</th>
+            <th scope="col">Efectivo</th>
+            <th scope="col">Repartidor</th>
+            <th scope="col">Servicio</th>
+            <th scope="col">Estatus</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders" class="table-secondary">
+            <td>{{ order.numerOrden }}</td>
+            <td>{{ order.createdAt ? (order.createdAt | date: 'short') : 'N/A' }}</td>
+            <td>{{ order.numeroCaja }}</td>
+            <td>{{ order.nameClient }}</td>
+            <td>{{ order.direction }}</td>
+            <td>{{ order.montoCompra | currency }}</td>
+            <td>{{ order.transferenciaPay | currency }}</td>
+            <td>{{ order.efectivo | currency }}</td>
+            <td>{{ order.nameDelivery }}</td>
+            <td>{{ order.recharge }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h5 *ngIf="orders.length == 0">No hay ordenes</h5>
+    </div>
+  </div>
+</div>

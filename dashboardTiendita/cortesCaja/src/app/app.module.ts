@@ -2,6 +2,7 @@ import { NgModule, isDevMode, NO_ERRORS_SCHEMA, Component } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms'; 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
 
@@ -25,6 +26,7 @@ import { ProgressBarComponent } from './shared/progress-bar/progress-bar.compone
 import { DatePipe } from '@angular/common';
 import { DeliveryOrdersComponent } from './componentes/delivery-orders/delivery-orders.component';
 import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-date.component';
+import { NavbarComponent } from './componentes/navbar/navbar.component';
 
 
 
@@ -37,6 +39,7 @@ import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-da
     ListOrdersComponent,
     AddEditOrderComponent,
     ProgressBarComponent,
+    NavbarComponent,
     DeliveryOrdersComponent,
     OrdersByDateComponent
   ],
@@ -59,7 +62,7 @@ import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-da
   registrationStrategy: 'registerWhenStable:30000'
 })
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, { provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

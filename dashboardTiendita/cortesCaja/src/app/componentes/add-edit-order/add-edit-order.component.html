@@ -59,9 +59,7 @@
                             <div>
                                 <label for="client" class="form-label mt-2">Servicio</label>
                                 <input formControlName="recharge" type="text" class="form-control" id="recharge" aria-describedby="emailHelp" placeholder="Recarga">
-                                <span *ngIf="form.get('recharge')?.hasError('required')&& form.get('recharge')?.touched">
-                                    El campo es <strong>requerido</strong>
-                                </span>
+                                
                             </div>
                             
                               <div class="row mt-2 text-center">

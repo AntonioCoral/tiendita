@@ -14,6 +14,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
 
   listOrder: Order[] = [];
   loading: boolean = false;
+  selectedDate: string = ''
 
   constructor(
     private _orderService: OrderService,
@@ -23,6 +24,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.selectedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
     this.getListOrdenes();
     this.listenForNewOrders();
     this.listenForUpdatedOrders();
@@ -35,7 +37,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
 
   getListOrdenes() {
     this.loading = true;
-    this._orderService.getListOrdenes().subscribe((data: Order[]) => {
+    this._orderService.getOrdersByDate(this.selectedDate).subscribe((data: Order[]) => {
       this.listOrder = data;
       this.loading = false;
     });
