@@ -42,11 +42,11 @@
             <th scope="col">Repartidor</th>
             <th scope="col">Servicio</th>
             <th scope="col">Estatus</th>
-            <th></th>
+            
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of orders" class="table-secondary">
+          <tr *ngFor="let order of orders" class="table-light">
             <td>{{ order.numerOrden }}</td>
             <td>{{ order.createdAt ? (order.createdAt | date: 'short') : 'N/A' }}</td>
             <td>{{ order.numeroCaja }}</td>

@@ -27,6 +27,8 @@ import { DatePipe } from '@angular/common';
 import { DeliveryOrdersComponent } from './componentes/delivery-orders/delivery-orders.component';
 import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-date.component';
 import { NavbarComponent } from './componentes/navbar/navbar.component';
+import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.component';
+import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
 
 
 
@@ -41,7 +43,9 @@ import { NavbarComponent } from './componentes/navbar/navbar.component';
     ProgressBarComponent,
     NavbarComponent,
     DeliveryOrdersComponent,
-    OrdersByDateComponent
+    OrdersByDateComponent,
+    CorteCajaComponent,
+    AddCorteComponent
   ],
   imports: [
     BrowserModule,

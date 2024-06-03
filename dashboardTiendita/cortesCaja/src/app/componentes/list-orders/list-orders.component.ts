@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router'; // Importa el Router
 import { Order } from 'src/app/interfaces/order';
 import { OrderService } from 'src/app/services/order.service';
 import { SocketService } from 'src/app/services/conexion.service';
@@ -11,16 +12,19 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./list-orders.component.css']
 })
 export class ListOrdersComponent implements OnInit, OnDestroy {
-
   listOrder: Order[] = [];
   loading: boolean = false;
-  selectedDate: string = ''
+  selectedDate: string = '';
+  showModal: boolean = false;
+  authCredentials = { username: '', password: '' };
+  selectedOrderId: number | undefined;
 
   constructor(
     private _orderService: OrderService,
     private toastr: ToastrService,
     private datePipe: DatePipe,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -31,9 +35,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     this.listenForDeletedOrders();
   }
 
-  ngOnDestroy(): void {
-    
-  }
+  ngOnDestroy(): void {}
 
   getListOrdenes() {
     this.loading = true;
@@ -51,26 +53,34 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateRepartidor(id: number, repartidor: string) {
-    this._orderService.getOrder(id).subscribe((order: Order) => {
-      order.nameDelivery = repartidor;
-      this._orderService.updateOrden(id, order).subscribe(() => {
-        console.log(`Repartidor actualizado para la orden ${id}`);
-        this.getListOrdenes(); // Actualizar la lista de órdenes
-      });
-    });
-  }
-
   getInputValue(event: Event): string {
     return (event.target as HTMLInputElement).value;
   }
 
-  updateEstadoPedido(id: number, status: string) {
+  updateRepartidor(id: number | undefined, repartidor: string) {
+    if (id === undefined) {
+      console.error('ID is undefined');
+      return;
+    }
+    this._orderService.getOrder(id).subscribe((order: Order) => {
+      order.nameDelivery = repartidor;
+      this._orderService.updateOrden(id, order).subscribe(() => {
+        console.log(`Repartidor actualizado para la orden ${id}`);
+        this.getListOrdenes();
+      });
+    });
+  }
+
+  updateEstadoPedido(id: number | undefined, status: string) {
+    if (id === undefined) {
+      console.error('ID is undefined');
+      return;
+    }
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.status = status;
       this._orderService.updateOrden(id, order).subscribe(() => {
         console.log('Estatus actualizado');
-        this.getListOrdenes(); // Actualizar la lista de órdenes
+        this.getListOrdenes();
       });
     });
   }
@@ -103,5 +113,30 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       this.toastr.warning('Orden eliminada', 'Órdenes actualizadas');
     });
   }
-  
+
+  openAuthModal(orderId: number | undefined) {
+    if (orderId === undefined) {
+      console.error('Order ID is undefined');
+      return;
+    }
+    this.selectedOrderId = orderId;
+    this.showModal = true;
+  }
+
+  closeAuthModal() {
+    this.showModal = false;
+    this.authCredentials = { username: '', password: '' };
+  }
+
+  authenticate() {
+    const { username, password } = this.authCredentials;
+    if (username === 'admin' && password === 'aljaC0ir') {
+      this.showModal = false;
+      if (this.selectedOrderId !== undefined) {
+        this.router.navigate(['/edit', this.selectedOrderId]);
+      }
+    } else {
+      this.toastr.error('Usuario o contraseña incorrectos');
+    }
+  }
 }

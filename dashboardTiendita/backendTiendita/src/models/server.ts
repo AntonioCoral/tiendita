@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import db from '../db/conecction';
 import routesOrden from '../routes/orden';
 import routesCliente from '../routes/cliente';
+import routesCaja from '../routes/caja';
+import { syncDatabase } from '.';
 
 dotenv.config();
 
@@ -37,8 +39,10 @@ class Server {
     }
 
     listen() {
-        this.server.listen(this.port, () => {
-            console.log('Aplicación corriendo en el puerto:', this.port);
+        syncDatabase().then(() =>{
+            this.server.listen(this.port, () => {
+                console.log('Aplicación corriendo en el puerto:', this.port);
+        })
         });
     }
 
@@ -50,6 +54,7 @@ class Server {
         // Pasar io como parte del contexto a las rutas
         this.app.use('/api/ordenes', routesOrden(this.io));
         this.app.use('/api/clientes', routesCliente);
+        this.app.use('/api/caja', routesCaja)
     }
 
     middlewares() {

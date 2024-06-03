@@ -8,6 +8,8 @@ import { ListOrdersComponent } from './componentes/list-orders/list-orders.compo
 import { AddEditOrderComponent } from './componentes/add-edit-order/add-edit-order.component';
 import { DeliveryOrdersComponent } from './componentes/delivery-orders/delivery-orders.component';
 import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-date.component';
+import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.component';
+import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
 
 
 const routes: Routes = [
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'add', component: AddEditOrderComponent},
   { path: 'edit/:id', component: AddEditOrderComponent},
   { path: 'delivery-orders/:nameDelivery', component: DeliveryOrdersComponent },
+  { path: 'corte-caja', component: CorteCajaComponent},
+  { path: 'addcorte', component: AddCorteComponent},
   { path: 'orders-by-date', component: OrdersByDateComponent },
   { path: '**', redirectTo:'', pathMatch: 'full'},
 ];

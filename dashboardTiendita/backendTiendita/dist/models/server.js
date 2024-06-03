@@ -20,6 +20,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const conecction_1 = __importDefault(require("../db/conecction"));
 const orden_1 = __importDefault(require("../routes/orden"));
 const cliente_1 = __importDefault(require("../routes/cliente"));
+const caja_1 = __importDefault(require("../routes/caja"));
+const _1 = require(".");
 dotenv_1.default.config();
 class Server {
     constructor() {
@@ -41,8 +43,10 @@ class Server {
         this.sockets();
     }
     listen() {
-        this.server.listen(this.port, () => {
-            console.log('Aplicación corriendo en el puerto:', this.port);
+        (0, _1.syncDatabase)().then(() => {
+            this.server.listen(this.port, () => {
+                console.log('Aplicación corriendo en el puerto:', this.port);
+            });
         });
     }
     routes() {
@@ -52,6 +56,7 @@ class Server {
         // Pasar io como parte del contexto a las rutas
         this.app.use('/api/ordenes', (0, orden_1.default)(this.io));
         this.app.use('/api/clientes', cliente_1.default);
+        this.app.use('/api/caja', caja_1.default);
     }
     middlewares() {
         this.app.use(express_1.default.json());

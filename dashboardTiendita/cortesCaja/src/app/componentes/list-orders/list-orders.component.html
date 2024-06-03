@@ -25,7 +25,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of listOrder" class="table-secondary">
+        <tr *ngFor="let item of listOrder" class="table-light">
           <td>{{item.numerOrden}}</td>
           <td>{{item.createdAt ? (item.createdAt | date: 'short') : 'N/A' }}</td>
           <td>{{item.numeroCaja}}</td>
@@ -36,28 +36,53 @@
           <td>{{item.efectivo | currency}}</td>
           <td>
             <input 
-              *ngIf="item.id !== undefined" 
               type="text" 
               class="form-control" 
               placeholder="{{item.nameDelivery}}"
               id="repartidor"
-              (keyup.enter)="updateRepartidor(item.id, getInputValue($event))">            
+              (keyup.enter)="updateRepartidor(item.id, getInputValue($event))"
+              *ngIf="item.id !== undefined">
           </td>
           <td>{{item.recharge}}</td>
           <td>
             <input 
-              *ngIf="item.id !== undefined" 
               type="text" 
               class="form-control" 
               placeholder="{{item.status}}"
               id="status"
-              (keyup.enter)="updateEstadoPedido(item.id, getInputValue($event))">
+              (keyup.enter)="updateEstadoPedido(item.id, getInputValue($event))"
+              *ngIf="item.id !== undefined">
+          </td>
           <td>
-            <button type="button" class="btn btn-info btn-sm" routerLink="/edit/{{ item.id }}">Edit</button>
+            <button type="button" class="btn btn-info btn-sm" (click)="openAuthModal(item.id)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
     <h5 *ngIf="listOrder.length == 0">No hay ordenes</h5>
+  </div>
+</div>
+
+<div id="authModal" class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Autenticación requerida</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input type="text" class="form-control" id="username" [(ngModel)]="authCredentials.username">
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" class="form-control" id="password" [(ngModel)]="authCredentials.password">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="authenticate()">Aceptar</button>
+        <button type="button" class="btn btn-secondary" (click)="closeAuthModal()">Cerrar</button>
+      </div>
+    </div>
   </div>
 </div>
