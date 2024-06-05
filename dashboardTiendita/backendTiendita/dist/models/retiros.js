@@ -15,6 +15,10 @@ const Retiros = conecction_1.default.define('Retiros', {
     },
     monto: {
         type: sequelize_1.DataTypes.DOUBLE,
+    },
+    descripcion: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
     }
 });
 exports.default = Retiros;

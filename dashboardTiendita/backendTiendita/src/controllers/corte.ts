@@ -66,7 +66,8 @@ export const createCaja = async (req: Request, res: Response) => {
           console.log("Creando retiro:", retiro);
           await Retiros.create({
             cajaId: nuevaCaja.id,
-            monto: retiro.monto
+            monto: retiro.monto,
+            descripcion: retiro.descripcion
           }, { transaction });
         }
       }

@@ -1,11 +1,11 @@
 <app-navbar></app-navbar>
 
-<div class="containter">
-    <button type="button" class="btn btn-primary" routerLink="/addcorte">Nuevo corte</button>
-</div>
-
 <div class="container mt-4">
-    <h2>Buscar Corte por Fecha</h2>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-primary" routerLink="/addcorte">Nuevo corte</button>
+    </div>
+
+    <h2 class="text-center">Buscar Corte por Fecha</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="input-group mb-3">
         <input type="date" class="form-control" [(ngModel)]="selectedDate" name="selectedDate">
@@ -14,10 +14,10 @@
     </form>
   
     <div *ngIf="cortes.length > 0">
-      <h3>Cortes para {{ selectedDate }}</h3>
+      <h3 class="text-center">Cortes para {{ selectedDate }}</h3>
       <div *ngFor="let corte of cortes" class="card mb-3">
         <div class="card-header">
-          Corte ID: {{ corte.id }} - Fecha: {{ corte.fecha }} Responsable: {{ corte.nombre}} Numero de caja:   {{ corte.numeroCaja}}
+          Corte ID: {{ corte.id }} - Fecha: {{ corte.fecha }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
         </div>
         <div class="card-body">
           <p>Total Efectivo: {{ corte.totalEfectivo }}</p>
@@ -45,7 +45,7 @@
           <h4>Retiros</h4>
           <ul>
             <li *ngFor="let retiro of corte.retiros">
-              Monto: {{ retiro.monto }}
+              Monto: {{ retiro.monto }} - Descripción: {{ retiro.descripcion }}
             </li>
           </ul>
   
@@ -59,11 +59,10 @@
           <h4>Pedidos en Tránsito</h4>
           <ul>
             <li *ngFor="let pedido of corte.pedidosTransitos">
-              Monto: {{ pedido.monto }} 
+              Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }}
             </li>
           </ul>
         </div>
       </div>
     </div>
-  </div>
-  
+</div>

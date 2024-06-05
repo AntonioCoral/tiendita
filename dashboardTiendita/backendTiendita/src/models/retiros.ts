@@ -12,6 +12,10 @@ const Retiros = db.define('Retiros', {
   monto: {
     type: DataTypes.DOUBLE,
     
+  },
+  descripcion: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 });
 

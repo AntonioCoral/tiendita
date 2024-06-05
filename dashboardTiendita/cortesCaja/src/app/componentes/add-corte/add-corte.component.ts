@@ -32,9 +32,9 @@ export class AddCorteComponent {
     { denominacion: 0.50, cantidad: 0 }
   ];
   transferencias: Transferencia[] = [{ monto: 0 }];
-  retiros: Retiro[] = [{ monto: 0 }];
+  retiros: Retiro[] = [{ monto: 0, descripcion: '' }];
   pagosTarjeta: PagoTarjeta[] = [{ monto: 0 }];
-  pedidosTransitos: PedidosTransitos[] = [{ monto: 0 }];
+  pedidosTransitos: PedidosTransitos[] = [{ monto: 0, descripcion: '' }];
   totalCalculado: number = 0;
   resultado: string = '';
 
@@ -57,14 +57,19 @@ export class AddCorteComponent {
   }
 
   calcularTotal() {
+    // Calcula el total de denominaciones
     const totalDenominaciones = this.denominaciones.reduce((acc, denom) => acc + (denom.denominacion * denom.cantidad), 0);
+    this.totalEfectivo = totalDenominaciones; // Asigna el total de denominaciones a totalEfectivo
+  
+    // Calcula los totales de otros campos
     const totalTransferencias = this.transferencias.reduce((acc, trans) => acc + trans.monto, 0);
     const totalRetiros = this.retiros.reduce((acc, retiro) => acc + retiro.monto, 0);
     const totalPagosTarjeta = this.pagosTarjeta.reduce((acc, pago) => acc + pago.monto, 0);
     const totalPedidoTransitos = this.pedidosTransitos.reduce((acc, pedido) => acc + pedido.monto, 0);
-
+  
+    // Calcula el total calculado y la diferencia
     this.totalCalculado = totalDenominaciones + totalTransferencias + totalRetiros + totalPagosTarjeta + totalPedidoTransitos - this.recargas;
-
+  
     if (this.totalCalculado > this.ventaTotal) {
       this.resultado = `Sobra $${this.totalCalculado - this.ventaTotal}`;
     } else if (this.totalCalculado < this.ventaTotal) {
@@ -73,6 +78,7 @@ export class AddCorteComponent {
       this.resultado = 'Todo cuadra';
     }
   }
+  
 
   onSubmit() {
     const denominacionesCorte: Denominacion[] = this.denominaciones.filter(denom => denom && denom.denominacion != null && denom.cantidad != null);

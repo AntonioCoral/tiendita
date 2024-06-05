@@ -72,7 +72,8 @@ const createCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     console.log("Creando retiro:", retiro);
                     yield retiros_1.default.create({
                         cajaId: nuevaCaja.id,
-                        monto: retiro.monto
+                        monto: retiro.monto,
+                        descripcion: retiro.descripcion
                     }, { transaction });
                 }
             }

@@ -15,6 +15,7 @@ export interface Transferencia {
 export interface Retiro {
     id?: number;
     monto: number;
+    descripcion?: string;
     cajaId?: number;
 }
 
@@ -27,6 +28,7 @@ export interface PagoTarjeta {
 export interface PedidosTransitos {
     id?: number;
     monto:number;
+    descripcion?: string;
     cajaId?: number;
 }
 
