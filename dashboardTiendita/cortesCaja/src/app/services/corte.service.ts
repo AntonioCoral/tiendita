@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CorteCaja } from '../interfaces/corte';
+import { CorteCaja, PedidosTransitos } from '../interfaces/corte';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CorteCajaService {
-  private apiUrl = 'http://89.116.50.243:443/api/caja/';
+  private apiUrl = 'http://localhost:443/api/caja/';
 
   constructor(private http: HttpClient) {}
 
@@ -27,11 +27,16 @@ export class CorteCajaService {
         catchError(this.handleError)
       );
   }
+
   getCortesByDate(date: string): Observable<CorteCaja[]> {
     return this.http.get<CorteCaja[]>(`${this.apiUrl}date/${date}`)
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  actualizarEstadoPedido(corteId: number, pedido: PedidosTransitos): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}${corteId}/pedidos/${pedido.id}`, pedido);
   }
 
   // Método para manejar errores de la petición HTTP

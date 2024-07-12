@@ -63,7 +63,7 @@ export class ClientesComponent {
       (response) => {
         this.foundClient = response;
         this.isNewClient = false;
-        this.goToAddOrder();
+        
       },
       (error) => {
         console.error('Error al agregar cliente:', error);

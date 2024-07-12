@@ -34,7 +34,7 @@ export class AddCorteComponent {
   transferencias: Transferencia[] = [{ monto: 0 }];
   retiros: Retiro[] = [{ monto: 0, descripcion: '' }];
   pagosTarjeta: PagoTarjeta[] = [{ monto: 0 }];
-  pedidosTransitos: PedidosTransitos[] = [{ monto: 0, descripcion: '' }];
+  pedidosTransitos: PedidosTransitos[] = [{ monto: 0, descripcion: '', estatus: '' }];
   totalCalculado: number = 0;
   resultado: string = '';
 

@@ -1,10 +1,58 @@
-.title{
- margin-top: 25px;
- display: flex;
- justify-content:space-between;
-}
-.form{
-    margin-top: 15px;
-    display:flex;
-    justify-content:center;
-}
+/* Estilos para la tabla y el formulario */
+.container {
+    margin-top: 25px;
+  }
+  
+  .title {
+    margin-bottom: 15px;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    max-height: 70vh; /* Ajusta la altura máxima según sea necesario */
+  }
+  
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  
+  .table th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+  }
+  
+  .table-light {
+    background-color: #f8f9fa;
+  }
+  
+  .table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  /* Estilos para el modal */
+  .modal-dialog {
+    max-width: 400px;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .modal-footer {
+    justify-content: center;
+  }
+  

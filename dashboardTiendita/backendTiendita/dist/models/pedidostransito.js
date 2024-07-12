@@ -21,6 +21,10 @@ const PedidosTransitos = conecction_1.default.define('PedidosTransitos', {
     descripcion: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
+    },
+    estatus: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
     }
 }, {
     tableName: 'PedidosTransitos',

@@ -94,7 +94,8 @@ export const createCaja = async (req: Request, res: Response) => {
           await PedidosTransitos.create({
             cajaId: nuevaCaja.id,
             monto: transito.monto,
-            descripcion: transito.descripcion // Asegúrate de incluir la descripción si está disponible
+            descripcion: transito.descripcion ,
+            estatus: transito.estatus// Asegúrate de incluir la descripción si está disponible
           }, { transaction });
         }
       }
@@ -142,6 +143,38 @@ export const getCortesByDate = async (req: Request, res: Response) => {
     } else {
       res.status(500).json({ error: 'An unknown error occurred.' });
     }
+  }
+};
+
+
+
+export const actualizarPedidoTransito = async (req: Request, res:Response) => {
+  const { cajaId, pedidoId } = req.params;
+  const { estatus } = req.body;
+
+  try {
+    // Busca el pedido en tránsito por su ID y el ID de la caja
+    const pedido = await PedidosTransitos.findOne({ 
+      where: { 
+        id: pedidoId,
+        cajaId: cajaId
+      } 
+    });
+
+    // Si no se encuentra el pedido, devuelve un error 404
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido en tránsito no encontrado' });
+    }
+
+    // Actualiza el estado del pedido
+    pedido.estatus = estatus;
+    await pedido.save(); // Guarda los cambios en la base de datos
+
+    // Devuelve el pedido actualizado como respuesta
+    res.json(pedido);
+  } catch (error) {
+    console.error("Error al actualizar el pedido en tránsito:", error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 

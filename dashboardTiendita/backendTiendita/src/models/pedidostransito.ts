@@ -17,6 +17,10 @@ const PedidosTransitos = db.define('PedidosTransitos', {
   descripcion: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  estatus: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
   tableName: 'PedidosTransitos',

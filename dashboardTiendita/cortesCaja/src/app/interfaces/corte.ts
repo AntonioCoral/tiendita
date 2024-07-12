@@ -29,6 +29,7 @@ export interface PedidosTransitos {
     id?: number;
     monto:number;
     descripcion?: string;
+    estatus?: string;
     cajaId?: number;
 }
 

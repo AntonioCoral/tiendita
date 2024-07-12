@@ -3,11 +3,12 @@
 <app-clientes></app-clientes>
 
 <div *ngIf="!loading" class="container">
-  <div class="title">
+  <div class="title d-flex justify-content-between align-items-center">
     <h2>ORDENES</h2>
     <button type="button" class="btn btn-danger" routerLink="/add">Agregar orden</button>
   </div>
-  <div class="form">
+  
+  <div class="table-responsive">
     <table *ngIf="listOrder.length > 0" class="table table-hover table-primary">
       <thead>
         <tr>
@@ -15,7 +16,7 @@
           <th scope="col">Hora</th>
           <th scope="col">Caja</th>
           <th scope="col">Cliente</th>
-          <th scope="col">Direccion</th>
+          <th scope="col">Dirección</th>
           <th scope="col">Total</th>
           <th scope="col">Transferencia</th>
           <th scope="col">Efectivo</th>
@@ -27,29 +28,29 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of listOrder" class="table-light">
-          <td>{{item.numerOrden}}</td>
-          <td>{{item.createdAt ? (item.createdAt | date: 'short') : 'N/A' }}</td>
-          <td>{{item.numeroCaja}}</td>
-          <td>{{item.nameClient}}</td>
-          <td>{{item.direction}}</td>
-          <td>{{item.montoCompra | currency}}</td>
-          <td>{{item.transferenciaPay | currency}}</td>
-          <td>{{item.efectivo | currency}}</td>
+          <td>{{ item.numerOrden }}</td>
+          <td>{{ item.createdAt ? (item.createdAt | date: 'short') : 'N/A' }}</td>
+          <td>{{ item.numeroCaja }}</td>
+          <td>{{ item.nameClient }}</td>
+          <td>{{ item.direction }}</td>
+          <td>{{ item.montoCompra | currency }}</td>
+          <td>{{ item.transferenciaPay | currency }}</td>
+          <td>{{ item.efectivo | currency }}</td>
           <td>
             <input 
               type="text" 
               class="form-control" 
-              placeholder="{{item.nameDelivery}}"
+              placeholder="{{ item.nameDelivery }}"
               id="repartidor"
               (keyup.enter)="updateRepartidor(item.id, getInputValue($event))"
               *ngIf="item.id !== undefined">
           </td>
-          <td>{{item.recharge}}</td>
+          <td>{{ item.recharge }}</td>
           <td>
             <input 
               type="text" 
               class="form-control" 
-              placeholder="{{item.status}}"
+              placeholder="{{ item.status }}"
               id="status"
               (keyup.enter)="updateEstadoPedido(item.id, getInputValue($event))"
               *ngIf="item.id !== undefined">
@@ -60,7 +61,7 @@
         </tr>
       </tbody>
     </table>
-    <h5 *ngIf="listOrder.length == 0">No hay ordenes</h5>
+    <h5 *ngIf="listOrder.length == 0" class="text-center">No hay órdenes</h5>
   </div>
 </div>
 

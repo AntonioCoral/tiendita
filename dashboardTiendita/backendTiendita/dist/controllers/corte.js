@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCortesByDate = exports.createCaja = void 0;
+exports.actualizarPedidoTransito = exports.getCortesByDate = exports.createCaja = void 0;
 const conecction_1 = __importDefault(require("../db/conecction"));
 const caja_1 = __importDefault(require("../models/caja"));
 const denominaciones_1 = __importDefault(require("../models/denominaciones"));
@@ -98,7 +98,8 @@ const createCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     yield pedidostransito_1.default.create({
                         cajaId: nuevaCaja.id,
                         monto: transito.monto,
-                        descripcion: transito.descripcion // Asegúrate de incluir la descripción si está disponible
+                        descripcion: transito.descripcion,
+                        estatus: transito.estatus // Asegúrate de incluir la descripción si está disponible
                     }, { transaction });
                 }
             }
@@ -151,3 +152,30 @@ const getCortesByDate = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getCortesByDate = getCortesByDate;
+const actualizarPedidoTransito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cajaId, pedidoId } = req.params;
+    const { estatus } = req.body;
+    try {
+        // Busca el pedido en tránsito por su ID y el ID de la caja
+        const pedido = yield pedidostransito_1.default.findOne({
+            where: {
+                id: pedidoId,
+                cajaId: cajaId
+            }
+        });
+        // Si no se encuentra el pedido, devuelve un error 404
+        if (!pedido) {
+            return res.status(404).json({ error: 'Pedido en tránsito no encontrado' });
+        }
+        // Actualiza el estado del pedido
+        pedido.estatus = estatus;
+        yield pedido.save(); // Guarda los cambios en la base de datos
+        // Devuelve el pedido actualizado como respuesta
+        res.json(pedido);
+    }
+    catch (error) {
+        console.error("Error al actualizar el pedido en tránsito:", error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+exports.actualizarPedidoTransito = actualizarPedidoTransito;
