@@ -23,6 +23,7 @@
     "@angular/service-worker": "^15.2.8",
     "angularx-qrcode": "^15.0.1",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "http": "^0.0.1-security",
     "moment": "^2.30.1",
     "ngx-toastr": "^16.2.0",

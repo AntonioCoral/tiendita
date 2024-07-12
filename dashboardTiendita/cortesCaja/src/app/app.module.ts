@@ -29,6 +29,7 @@ import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-da
 import { NavbarComponent } from './componentes/navbar/navbar.component';
 import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.component';
 import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
+import { ClientesComponent } from './componentes/clientes/clientes.component';
 
 
 
@@ -45,7 +46,8 @@ import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
     DeliveryOrdersComponent,
     OrdersByDateComponent,
     CorteCajaComponent,
-    AddCorteComponent
+    AddCorteComponent,
+    ClientesComponent
   ],
   imports: [
     BrowserModule,

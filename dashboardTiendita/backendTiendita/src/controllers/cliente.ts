@@ -1,27 +1,36 @@
 import {Request, Response} from 'express';
 import Cliente from '../models/cliente';
+import { Op } from 'sequelize';
 
 export const getClientes = async (req: Request, res: Response) => {
     const listCliente = await Cliente.findAll()
     res.json(listCliente);
 }
 
-export const getCliente = async (req: Request, res: Response) => {
-    const { id } = req.params;
+export const searchClient = async (req: Request, res: Response) => {
+    const { query } = req.params;
 
     try {
-        const cliente = await Cliente.findByPk(id);
+        const cliente = await Cliente.findOne({
+            where: {
+                [Op.or]: [
+                    { nombre: { [Op.like]: `%${query}%` } },
+                    { telefono: { [Op.like]: `%${query}%` } }
+                ]
+            }
+        });
 
         if (cliente) {
             res.json(cliente);
         } else {
-            res.status(404).json({ msg: 'No existe el cliente con la id: ' + id });
+            res.status(404).json({ msg: 'No existe el cliente con el nombre o teléfono proporcionado.' });
         }
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
     }
-}
+};
+
 
 
 export const deleteCliente = async (req: Request, res: Response) => {

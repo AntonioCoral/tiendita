@@ -38,6 +38,15 @@ export class AddEditOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.aRouter.queryParams.subscribe(params => {
+      if (params['nombre'] && params['direction']) {
+        this.form.patchValue({
+          nameClient: params['nombre'],
+          direction: params['direction']
+        });
+      }
+    });
+
     if (this.id != 0) {
       this.operacion = 'Editar ';
       this.getOrden(this.id);

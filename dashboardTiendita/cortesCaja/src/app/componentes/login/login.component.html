@@ -5,50 +5,51 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="login.component.css">
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="./login.component.css">
 </head>
 
-<body style="background-color: transparent;">
+<body>
 
-  
-  
-        <div class="container">
-          <div class="row">
-            <div class="logo">
-              <img src="./assets/logo2.png"style="width: 310px; height: 160px; margin-left: 25%; padding: 10px;" alt="Logo">
+  <div class="container">
+    <div class="card">
+      <div class="logo">
+        <img src="./assets/logo2.png" alt="Logo">
+      </div>
+      <div class="card-header btn-primary">
+        Inicia sesión
+      </div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" formControlName="username" class="form-control" required>
+          </div>
+         
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <div class="input-group">
+              <input type="password" id="password" formControlName="password" class="form-control" [attr.type]="passwordVisible ? 'text' : 'password'" required>
+              <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+                <i class="bi bi-eye-slash" *ngIf="!passwordVisible"></i>
+                <i class="bi bi-eye" *ngIf="passwordVisible"></i>
+              </button>
             </div>
           </div>
-          <div class="container" style="height: 5px; margin-top: 12px; padding: 20%;">
-            <div class="card" style="width:18px;">
-              <div class="card-header">
-                Inicia sesión
-              </div>
-              <div class="card-body">
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-              <div class="list-group-item">
-                <label for="username">Usuario</label>
-                <input type="text" id="username" formControlName="username" class="form-control" required>
-              </div>
-              <div class="list-group-item">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" formControlName="password" class="form-control" required>
-              </div>
-              <div class="list-group-item">
-                <label for="isDelivery">¿Eres repartidor?</label>
-                <select id="isDelivery" formControlName="isDelivery" class="form-control">
-                  <option value="true">Sí</option>
-                  <option value="false">No</option>
-                </select>
-              </div>
-
-                <button type="submit" class="btn btn-primary">Iniciar</button>
-              
-            </form>
+          
+          <div class="form-group">
+            <label for="isDelivery">¿Eres repartidor?</label>
+            <select id="isDelivery" formControlName="isDelivery" class="form-control">
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
           </div>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary">Iniciar</button>
+        </form>
       </div>
-     
+    </div>
+  </div>
+
 </body>
+
 </html>

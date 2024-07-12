@@ -12,22 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCliente = exports.postCliente = exports.deleteCliente = exports.getCliente = exports.getClientes = void 0;
+exports.updateCliente = exports.postCliente = exports.deleteCliente = exports.searchClient = exports.getClientes = void 0;
 const cliente_1 = __importDefault(require("../models/cliente"));
+const sequelize_1 = require("sequelize");
 const getClientes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const listCliente = yield cliente_1.default.findAll();
     res.json(listCliente);
 });
 exports.getClientes = getClientes;
-const getCliente = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
+const searchClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { query } = req.params;
     try {
-        const cliente = yield cliente_1.default.findByPk(id);
+        const cliente = yield cliente_1.default.findOne({
+            where: {
+                [sequelize_1.Op.or]: [
+                    { nombre: { [sequelize_1.Op.like]: `%${query}%` } },
+                    { telefono: { [sequelize_1.Op.like]: `%${query}%` } }
+                ]
+            }
+        });
         if (cliente) {
             res.json(cliente);
         }
         else {
-            res.status(404).json({ msg: 'No existe el cliente con la id: ' + id });
+            res.status(404).json({ msg: 'No existe el cliente con el nombre o teléfono proporcionado.' });
         }
     }
     catch (error) {
@@ -35,7 +43,7 @@ const getCliente = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
     }
 });
-exports.getCliente = getCliente;
+exports.searchClient = searchClient;
 const deleteCliente = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const cliente = yield cliente_1.default.findByPk(id);

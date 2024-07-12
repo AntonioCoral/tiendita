@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1717446433622,
+  "timestamp": 1720807563025,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,12 +13,12 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main.30a9ca692858bf55.js",
+        "/main.10665fb0570529f5.js",
         "/manifest.webmanifest",
         "/polyfills.fa03c3728b3c5716.js",
         "/runtime.f5a14d8efebe0c1e.js",
         "/scripts.024f6df6a826190c.js",
-        "/styles.51233c77d8692406.css"
+        "/styles.59bf860a69de58d4.css"
       ],
       "patterns": []
     },
@@ -40,7 +40,9 @@
         "/assets/icons/icon-96x96.png",
         "/assets/logo.jpg",
         "/assets/logo2.png",
-        "/assets/logo_jomat.png"
+        "/assets/logo_jomat.png",
+        "/bootstrap-icons.70a9dee9e5ab72aa.woff",
+        "/bootstrap-icons.bfa90bda92a84a6a.woff2"
       ],
       "patterns": []
     }
@@ -58,14 +60,16 @@
     "/assets/logo.jpg": "c1e489774d5bcc04c212744aefead7bd715beaf7",
     "/assets/logo2.png": "26f2670cfd962d19b728e116d40b7c6ea4846a83",
     "/assets/logo_jomat.png": "512c018b8459447bd3f516dc54027eed9d1b8797",
+    "/bootstrap-icons.70a9dee9e5ab72aa.woff": "d5831fd39baf13aff7626e483b9a089730f18604",
+    "/bootstrap-icons.bfa90bda92a84a6a.woff2": "020c3c6f9280a315e8425d7f92e15bcd0cdda1b2",
     "/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/index.html": "33d6367b7aa97037eddca032b4195796f1fe2a02",
-    "/main.30a9ca692858bf55.js": "3f75c939d43b387f1c9b608f86b9b8f3a540f53f",
+    "/index.html": "1cb3723dc6ee145531c6044c01beafe291bb7858",
+    "/main.10665fb0570529f5.js": "8d8799124565e346d387f9c914bc4cea20870137",
     "/manifest.webmanifest": "6f6a3ad2373931da03929be28176259f92fbe2e9",
     "/polyfills.fa03c3728b3c5716.js": "459c8c17d925ecfac12836b924457108dab0650d",
     "/runtime.f5a14d8efebe0c1e.js": "9595bf7d8ad015b5f5bf8af739393342c2c19fec",
     "/scripts.024f6df6a826190c.js": "bd9e34ca26fd2df83a840912464e86e3b19cecae",
-    "/styles.51233c77d8692406.css": "1264cdecb26696920cf98e8aa9a39e33a68e0975"
+    "/styles.59bf860a69de58d4.css": "bb3f98cec4777e88b5cf8963e97ae128c9347c68"
   },
   "navigationUrls": [
     {

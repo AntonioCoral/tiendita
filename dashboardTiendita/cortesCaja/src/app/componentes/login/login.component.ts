@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  passwordVisible = false;
 
   constructor(
     private fb: FormBuilder,
@@ -40,5 +41,8 @@ export class LoginComponent implements OnInit {
         this.toastr.error('Invalid credentials');
       }
     }
+  }
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }
