@@ -13,5 +13,6 @@ exports.default = (io) => {
     router.get('/delivery/:nameDelivery', orden_2.getOrdenesByDelivery);
     router.get('/date/:date', orden_2.getOrdenesByDate);
     router.get('/lastOrderNumber/:date', orden_2.getLastOrderNumber);
+    router.get('/checkOrderNumber/:orderNumber', orden_1.checkOrderNumberExists);
     return router;
 };

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
+exports.checkOrderNumberExists = exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
 const orden_1 = __importDefault(require("../models/orden"));
 const sequelize_1 = require("sequelize");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
@@ -172,3 +172,24 @@ const getLastOrderNumber = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getLastOrderNumber = getLastOrderNumber;
+const checkOrderNumberExists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { orderNumber } = req.params;
+    try {
+        const order = yield orden_1.default.findOne({
+            where: {
+                numerOrden: orderNumber
+            }
+        });
+        if (order) {
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error checking order number' });
+    }
+});
+exports.checkOrderNumberExists = checkOrderNumberExists;

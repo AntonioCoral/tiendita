@@ -163,3 +163,23 @@ export const getLastOrderNumber = async (req: Request, res: Response) => {
         res.status(500).json({ msg: 'Error fetching last order number' });
     }
 };
+
+export const checkOrderNumberExists = async (req: Request, res: Response) => {
+    const { orderNumber } = req.params;
+    try {
+        const order = await Orden.findOne({
+            where: {
+                numerOrden: orderNumber
+            }
+        });
+
+        if (order) {
+            res.json(true);
+        } else {
+            res.json(false);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error checking order number' });
+    }
+};

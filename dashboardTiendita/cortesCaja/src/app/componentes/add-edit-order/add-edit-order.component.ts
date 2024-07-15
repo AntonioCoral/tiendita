@@ -86,6 +86,11 @@ export class AddEditOrderComponent implements OnInit {
   }
 
   addOrden() {
+    // Asegúrate de que el número de orden esté generado antes de agregar la orden
+    if (!this.form.value.numerOrden) {
+      this.generateRandomOrderNumber();
+      return;
+    }
     const orden: Order = {
       numerOrden: this.form.value.numerOrden,
       numeroCaja: this.form.value.numeroCaja,

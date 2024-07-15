@@ -1,38 +1,63 @@
 <nav class="navbar navbar-bg-fixed-top">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MINI SUPER LA TIENDITA 24/7</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" routerLink="/corte-caja">Cortes de caja</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/orders-by-date">Reportes</a>
-            </li>
-          </ul>
-        </div>
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MINI SUPER LA TIENDITA 24/7</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-      <img src="./assets/logo2.png" style="width: 90px; height: 60px; margin-left: 5%;">
-      <div class="collapse navbar-collapse" id="navbarColor02">
-    </div>
-   
-      <button type="button" class="btn btn-outline-info mt-3" 
-      style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 1.5%;" routerLink="/">Salir</button>
-
-
-      <button type="button" class="btn btn-outline-success mt-2" 
-      style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 3%;" routerLink="/orders-by-date">Reportes</button>
-
-      <div class="collapse " id="navbarColor02">
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/orders-by-date">Reportes de ordenes</a> 
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="openAuthModal()">Cortes de caja</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/list-orders">Ordenes</a>
+          </li>
+        </ul>
       </div>
     </div>
-  </nav>
-
+    <img src="./assets/logo2.png" style="width: 90px; height: 60px; margin-left: 5%;">
+    <div class="collapse navbar-collapse" id="navbarColor02">
+  </div>
  
+    <button type="button" class="btn btn-outline-info mt-3" 
+    style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 1.5%;" routerLink="/">Salir</button>
+
+
+    <button type="button" class="btn btn-outline-success mt-2" 
+    style="font-size: 22px; width: 120px; height: 50px; font-family:'Raleway', sans-serif; font-weight: bold; margin-right: 3%;" routerLink="/orders-by-date">Reportes</button>
+
+    <div class="collapse " id="navbarColor02">
+    </div>
+  </div>
+</nav>
+
+<div id="authModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalLabel">Autenticación requerida</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input type="text" class="form-control" id="username" [(ngModel)]="authCredentials.username">
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" class="form-control" id="password" [(ngModel)]="authCredentials.password">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="authenticate()">Aceptar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
