@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router'; // Importa el Router
+import { Router } from '@angular/router';
 import { Order } from 'src/app/interfaces/order';
 import { OrderService } from 'src/app/services/order.service';
 import { SocketService } from 'src/app/services/conexion.service';
@@ -62,11 +62,16 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       console.error('ID is undefined');
       return;
     }
+    const scrollPosition = window.scrollY;
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.nameDelivery = repartidor;
       this._orderService.updateOrden(id, order).subscribe(() => {
         console.log(`Repartidor actualizado para la orden ${id}`);
-        this.getListOrdenes();
+        const index = this.listOrder.findIndex(o => o.id === id);
+        if (index !== -1) {
+          this.listOrder[index].nameDelivery = repartidor;
+        }
+        window.scrollTo(0, scrollPosition);
       });
     });
   }
@@ -76,11 +81,16 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       console.error('ID is undefined');
       return;
     }
+    const scrollPosition = window.scrollY;
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.status = status;
       this._orderService.updateOrden(id, order).subscribe(() => {
         console.log('Estatus actualizado');
-        this.getListOrdenes();
+        const index = this.listOrder.findIndex(o => o.id === id);
+        if (index !== -1) {
+          this.listOrder[index].status = status;
+        }
+        window.scrollTo(0, scrollPosition);
       });
     });
   }
@@ -92,7 +102,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       this.toastr.success('Nueva orden agregada', 'Orden añadida');
     });
   }
-  
+
   listenForUpdatedOrders() {
     this.socketService.onOrderUpdated().subscribe((order: Order) => {
       console.log('Orden actualizada recibida:', order);
@@ -105,7 +115,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       this.toastr.info('Orden actualizada', 'Órdenes actualizadas');
     });
   }
-  
+
   listenForDeletedOrders() {
     this.socketService.onOrderDeleted().subscribe((id: number) => {
       console.log('Orden eliminada recibida:', id);

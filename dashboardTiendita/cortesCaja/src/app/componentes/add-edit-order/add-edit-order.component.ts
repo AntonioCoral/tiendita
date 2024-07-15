@@ -50,8 +50,12 @@ export class AddEditOrderComponent implements OnInit {
     if (this.id != 0) {
       this.operacion = 'Editar ';
       this.getOrden(this.id);
+    } else {
+      // Generar número de orden aleatorio
+      this.generateRandomOrderNumber();
     }
   }
+  
 
   getOrden(id: number) {
     this.loading = true;
@@ -67,6 +71,17 @@ export class AddEditOrderComponent implements OnInit {
         transferenciaPay: data.transferenciaPay,
         recharge: data.recharge
       });
+    });
+  }
+  generateRandomOrderNumber() {
+    const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
+    this._orderService.checkOrderNumberExists(randomOrderNumber).subscribe(exists => {
+      if (exists) {
+        // Si el número de orden ya existe, generar otro
+        this.generateRandomOrderNumber();
+      } else {
+        this.form.patchValue({ numerOrden: randomOrderNumber });
+      }
     });
   }
 

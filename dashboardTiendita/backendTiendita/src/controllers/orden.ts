@@ -2,11 +2,31 @@ import { Request, Response } from 'express';
 import { Server as SocketIOServer } from 'socket.io';
 import Orden from '../models/orden';
 import { Op } from 'sequelize';
-import moment from 'moment';
+import moment from 'moment-timezone';
+
+// Configurar la zona horaria
+const TIMEZONE = 'America/Mexico_City';
 
 export const getOrdenes = async (req: Request, res: Response) => {
-    const listOrden = await Orden.findAll();
-    res.json(listOrden);
+    try {
+        const today = moment().tz(TIMEZONE).format('YYYY-MM-DD');
+        const startOfDay = moment.tz(today, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment.tz(today, TIMEZONE).endOf('day').toDate();
+
+        const listOrden = await Orden.findAll({
+            where: {
+                createdAt: {
+                    [Op.gte]: startOfDay,
+                    [Op.lte]: endOfDay
+                }
+            }
+        });
+
+        res.json(listOrden);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error al obtener las órdenes' });
+    }
 };
 
 export const getOrden = async (req: Request, res: Response) => {
@@ -76,63 +96,70 @@ export const updateOrden = async (req: Request, res: Response) => {
 };
 
 export const getOrdenesByDelivery = async (req: Request, res: Response) => {
-  const { nameDelivery } = req.params;
-  const startOfDay = moment().startOf('day').toDate();
-  const endOfDay = moment().endOf('day').toDate();
+    const { nameDelivery } = req.params;
+    const today = moment().tz(TIMEZONE).format('YYYY-MM-DD');
+    const startOfDay = moment.tz(today, TIMEZONE).startOf('day').toDate();
+    const endOfDay = moment.tz(today, TIMEZONE).endOf('day').toDate();
 
-  try {
-    const ordenes = await Orden.findAll({
-      where: {
-        nameDelivery,
-        createdAt: {
-          [Op.gte]: startOfDay,
-          [Op.lte]: endOfDay
-        }
-      }
-    });
-    res.json(ordenes);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
-  }
+    try {
+        const ordenes = await Orden.findAll({
+            where: {
+                nameDelivery,
+                createdAt: {
+                    [Op.gte]: startOfDay,
+                    [Op.lte]: endOfDay
+                }
+            }
+        });
+        res.json(ordenes);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'Ocurrió un error, intente más tarde' });
+    }
 };
 
-  export const getOrdenesByDate = async (req: Request, res:Response) => {
+export const getOrdenesByDate = async (req: Request, res: Response) => {
     const { date } = req.params;
-  
+
     try {
-      const orders = await Orden.findAll({
-        where: {
-          createdAt: {
-            [Op.gte]: moment(date).startOf('day').toDate(),
-            [Op.lte]: moment(date).endOf('day').toDate()
-          }
-        }
-      });
-      res.json(orders);
+        const startOfDay = moment.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment.tz(date, TIMEZONE).endOf('day').toDate();
+
+        const orders = await Orden.findAll({
+            where: {
+                createdAt: {
+                    [Op.gte]: startOfDay,
+                    [Op.lte]: endOfDay
+                }
+            }
+        });
+        res.json(orders);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: 'Error fetching orders' });
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching orders' });
     }
-  };
-  
-  export const getLastOrderNumber = async (req: Request, res: Response) => {
+};
+
+export const getLastOrderNumber = async (req: Request, res: Response) => {
     const { date } = req.params;
-  
+
     try {
-      const lastOrder = await Orden.findOne({
-        where: {
-          createdAt: {
-            [Op.gte]: moment(date).startOf('day').toDate(),
-            [Op.lte]: moment(date).endOf('day').toDate()
-          }
-        },
-        order: [['numerOrden', 'DESC']]
-      });
-      const lastOrderNumber = lastOrder ? lastOrder.numerOrden : 0;
-      res.json({ lastOrderNumber });
+        const startOfDay = moment.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment.tz(date, TIMEZONE).endOf('day').toDate();
+
+        const lastOrder = await Orden.findOne({
+            where: {
+                createdAt: {
+                    [Op.gte]: startOfDay,
+                    [Op.lte]: endOfDay
+                }
+            },
+            order: [['numerOrden', 'DESC']]
+        });
+        const lastOrderNumber = lastOrder ? lastOrder.numerOrden : 0;
+        res.json({ lastOrderNumber });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: 'Error fetching last order number' });
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching last order number' });
     }
-  };
+};

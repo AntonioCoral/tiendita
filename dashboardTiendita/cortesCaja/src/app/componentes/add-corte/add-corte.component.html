@@ -50,7 +50,7 @@
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" [(ngModel)]="transferencias[i].monto" name="transferencia{{i}}" (input)="calcularTotal()">
                   </div>
-                  <button type="button" class="btn btn-primary mb-3" (click)="agregarTransferencia()">Agregar Transferencia</button>
+                  <button type="button" class="btn btn-danger mb-3" (click)="agregarTransferencia()">Agregar Transferencia</button>
                 </div>
               </div>
 
@@ -64,7 +64,7 @@
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" [(ngModel)]="pedidosTransitos[i].monto" name="pedidoTransito{{i}}" (input)="calcularTotal()">
                   </div>
-                  <button type="button" class="btn btn-primary mb-3" (click)="agregarPedidoTransito()">Agregar pedido en transito</button>
+                  <button type="button" class="btn btn-danger mb-3" (click)="agregarPedidoTransito()">Agregar pedido en transito</button>
                 </div>
               </div>
 
@@ -78,7 +78,7 @@
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" [(ngModel)]="retiros[i].monto" name="retiro{{i}}" (input)="calcularTotal()">
                   </div>
-                  <button type="button" class="btn btn-primary mb-3" (click)="agregarRetiro()">Agregar Retiro</button>
+                  <button type="button" class="btn btn-danger mb-3" (click)="agregarRetiro()">Agregar Retiro</button>
                 </div>
               </div>
 
@@ -90,7 +90,7 @@
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" [(ngModel)]="pagosTarjeta[i].monto" name="pagoTarjeta{{i}}" (input)="calcularTotal()">
                   </div>
-                  <button type="button" class="btn btn-primary mb-3" (click)="agregarPagoTarjeta()">Agregar Pago Tarjeta</button>
+                  <button type="button" class="btn btn-danger mb-3" (click)="agregarPagoTarjeta()">Agregar Pago Tarjeta</button>
                 </div>
               </div>
 

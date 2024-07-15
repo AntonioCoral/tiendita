@@ -46,4 +46,8 @@ export class OrderService {
   updateOrden(id: number, order: Order): Observable<void> {
     return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`, order, { headers: this.headers });
   }
+
+  checkOrderNumberExists(orderNumber: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.myAppUrl}${this.myApiUrl}checkOrderNumber/${orderNumber}`);
+  }
 }

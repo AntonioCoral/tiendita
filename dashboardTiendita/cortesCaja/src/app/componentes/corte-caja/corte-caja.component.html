@@ -1,36 +1,75 @@
+<app-navbar></app-navbar>
+
 <div class="container mt-4">
-  <div class="text-center mb-4">
-    <button type="button" class="btn btn-primary" routerLink="/addcorte">Nuevo corte</button>
-  </div>
-
-  <h2 class="text-center">Buscar Corte por Fecha</h2>
-  <form (ngSubmit)="onSubmit()">
-    <div class="input-group mb-3">
-      <input type="date" class="form-control" [(ngModel)]="selectedDate" name="selectedDate">
-      <button class="btn btn-primary" type="submit">Buscar</button>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-primary" routerLink="/addcorte">Nuevo corte</button>
     </div>
-  </form>
 
-  <div *ngIf="cortes.length > 0">
-    <h3 class="text-center">Cortes para {{ selectedDate }}</h3>
-    <div *ngFor="let corte of cortes" class="card mb-3">
-      <div class="card-header">
-        Corte ID: {{ corte.id }} - Fecha: {{ corte.fecha }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
+    <h2 class="text-center">Buscar Corte por Fecha</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="input-group mb-3">
+        <input type="date" class="form-control" [(ngModel)]="selectedDate" name="selectedDate">
+        <button class="btn btn-primary" type="submit">Buscar</button>
       </div>
-      <div class="card-body">
-        <!-- Otros detalles de corte -->
-
-        <h4>Pedidos en Tránsito</h4>
-        <ul>
-          <li *ngFor="let pedido of corte.pedidosTransitos" class="mb-2">
-            Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }} - Estatus:
-            <input type="text" [(ngModel)]="pedido.estatus" class="form-control"
-              *ngIf="pedido.id !== undefined && corte.id !== undefined && pedido.estatus !== undefined"
-              (keyup.enter)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus)">
-            <button class="btn btn-primary btn-sm ml-2" (click)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus!)">Guardar</button>
-          </li>
-        </ul>
+    </form>
+  
+    <div *ngIf="cortes.length > 0">
+      <h3 class="text-center">Cortes para {{ selectedDate }}</h3>
+      <div *ngFor="let corte of cortes" class="card mb-3">
+        <div class="card-header">
+          Corte ID: {{ corte.id }} - Fecha: {{ corte.fecha }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
+        </div>
+        <div class="card-body">
+          <p>Total Efectivo: {{ corte.totalEfectivo }}</p>
+          <p>Total Transferencias: {{ corte.totalTransferencias }}</p>
+          <p>Total Retiros: {{ corte.totalRetiros }}</p>
+          <p>Total Pagos con Tarjeta: {{ corte.totalPagosTarjeta }}</p>
+          <p>Venta Total: {{ corte.ventaTotal }}</p>
+          <p>Recargas: {{ corte.recargas }}</p>
+          <p>Diferencia: {{ calcularDiferencia(corte) }}</p>
+  
+          <h4>Denominaciones</h4>
+          <ul>
+            <li *ngFor="let denom of corte.denominaciones">
+              Valor: {{ denom.denominacion }} - Cantidad: {{ denom.cantidad }}
+            </li>
+          </ul>
+  
+          <h4>Transferencias</h4>
+          <ul>
+            <li *ngFor="let trans of corte.transferencias">
+              Monto: {{ trans.monto }}
+            </li>
+          </ul>
+  
+          <h4>Retiros</h4>
+          <ul>
+            <li *ngFor="let retiro of corte.retiros">
+              Monto: {{ retiro.monto }} - Descripción: {{ retiro.descripcion }}
+            </li>
+          </ul>
+  
+          <h4>Pagos con Tarjeta</h4>
+          <ul>
+            <li *ngFor="let pago of corte.pagosTarjeta">
+              Monto: {{ pago.monto }}
+            </li>
+          </ul>
+  
+          <h4>Pedidos en Tránsito</h4>
+          <ul>
+            <li *ngFor="let pedido of corte.pedidosTransitos" class="mb-2">
+              Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }} - Estatus:
+              <input type="text" [(ngModel)]="pedido.estatus" class="form-control"
+                *ngIf="pedido.id !== undefined && corte.id !== undefined && pedido.estatus !== undefined"
+                (keyup.enter)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus)">
+              <button class="btn btn-primary btn-sm ml-2" (click)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus!)">Guardar</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 </div>
+
+       
+  

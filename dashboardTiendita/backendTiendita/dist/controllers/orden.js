@@ -15,10 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
 const orden_1 = __importDefault(require("../models/orden"));
 const sequelize_1 = require("sequelize");
-const moment_1 = __importDefault(require("moment"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
+// Configurar la zona horaria
+const TIMEZONE = 'America/Mexico_City';
 const getOrdenes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const listOrden = yield orden_1.default.findAll();
-    res.json(listOrden);
+    try {
+        const today = (0, moment_timezone_1.default)().tz(TIMEZONE).format('YYYY-MM-DD');
+        const startOfDay = moment_timezone_1.default.tz(today, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment_timezone_1.default.tz(today, TIMEZONE).endOf('day').toDate();
+        const listOrden = yield orden_1.default.findAll({
+            where: {
+                createdAt: {
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
+                }
+            }
+        });
+        res.json(listOrden);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error al obtener las órdenes' });
+    }
 });
 exports.getOrdenes = getOrdenes;
 const getOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,8 +107,9 @@ const updateOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.updateOrden = updateOrden;
 const getOrdenesByDelivery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nameDelivery } = req.params;
-    const startOfDay = (0, moment_1.default)().startOf('day').toDate();
-    const endOfDay = (0, moment_1.default)().endOf('day').toDate();
+    const today = (0, moment_timezone_1.default)().tz(TIMEZONE).format('YYYY-MM-DD');
+    const startOfDay = moment_timezone_1.default.tz(today, TIMEZONE).startOf('day').toDate();
+    const endOfDay = moment_timezone_1.default.tz(today, TIMEZONE).endOf('day').toDate();
     try {
         const ordenes = yield orden_1.default.findAll({
             where: {
@@ -112,11 +131,13 @@ exports.getOrdenesByDelivery = getOrdenesByDelivery;
 const getOrdenesByDate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { date } = req.params;
     try {
+        const startOfDay = moment_timezone_1.default.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment_timezone_1.default.tz(date, TIMEZONE).endOf('day').toDate();
         const orders = yield orden_1.default.findAll({
             where: {
                 createdAt: {
-                    [sequelize_1.Op.gte]: (0, moment_1.default)(date).startOf('day').toDate(),
-                    [sequelize_1.Op.lte]: (0, moment_1.default)(date).endOf('day').toDate()
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
                 }
             }
         });
@@ -131,11 +152,13 @@ exports.getOrdenesByDate = getOrdenesByDate;
 const getLastOrderNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { date } = req.params;
     try {
+        const startOfDay = moment_timezone_1.default.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment_timezone_1.default.tz(date, TIMEZONE).endOf('day').toDate();
         const lastOrder = yield orden_1.default.findOne({
             where: {
                 createdAt: {
-                    [sequelize_1.Op.gte]: (0, moment_1.default)(date).startOf('day').toDate(),
-                    [sequelize_1.Op.lte]: (0, moment_1.default)(date).endOf('day').toDate()
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
                 }
             },
             order: [['numerOrden', 'DESC']]

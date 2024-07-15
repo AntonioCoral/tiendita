@@ -13,7 +13,7 @@ export class CorteCajaComponent implements OnInit {
   selectedDate: string = '';
   cortes: CorteCaja[] = [];
 
-  constructor(private corteService: CorteCajaService) {}
+  constructor( private corteService: CorteCajaService) {}
 
   ngOnInit(): void {}
 

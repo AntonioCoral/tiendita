@@ -1,7 +1,9 @@
 /* Contenedor principal */
-.container {
+  .container {
     max-width: 1200px;
     margin: auto;
+    height: 100%;
+    overflow-y: auto; /* Permite el scroll vertical */
   }
   
   /* Estilos para los encabezados */
