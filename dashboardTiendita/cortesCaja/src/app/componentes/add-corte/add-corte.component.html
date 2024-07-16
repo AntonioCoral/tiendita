@@ -1,140 +1,142 @@
-<div class="col-sm-12 mb-3 mb-sm-0" style="width: 90%;">
-  <div class="card bg-default mb-3" style="max-width: 100%;">
-    <div class="card-header">Nuevo corte</div>
-    <div class="card-body">
-      <fieldset>
-        <form (ngSubmit)="onSubmit()">
-          <div class="row">
-            <!-- Column for denominaciones -->
-            <div class="col-lg-6">
-              <div class="card mb-3">
-                <div class="card-header">Denominaciones</div>
-                <div class="card-body">
-                  <div *ngFor="let denom of denominaciones; let i = index" class="input-group mb-3">
-                    <span class="input-group-text">Denominación {{denom.denominacion}}</span>
-                    <span class="input-group-text">Cantidad</span>
-                    <input type="number" class="form-control" [(ngModel)]="denominaciones[i].cantidad" name="denominacion{{denom.denominacion}}" (input)="calcularTotal()">
-                  </div>
-                </div>
-              </div>
-            </div>
+<div class="container mt-4">
+  <div class="col-sm-12 mb-3 mb-sm-0" style="width: 100%;">
+      <div class="card bg-default mb-3" style="max-width: 100%;">
+          <div class="card-header">Nuevo corte</div>
+          <div class="card-body">
+              <fieldset>
+                  <form (ngSubmit)="onSubmit()">
+                      <div class="row">
+                          <!-- Column for denominaciones -->
+                          <div class="col-lg-6">
+                              <div class="card mb-3">
+                                  <div class="card-header">Denominaciones</div>
+                                  <div class="card-body">
+                                      <div *ngFor="let denom of denominaciones; let i = index" class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Denominación {{denom.denominacion}}</span>
+                                          <span class="input-group-text input-group-text-small">Cantidad</span>
+                                          <input type="number" class="form-control" [(ngModel)]="denominaciones[i].cantidad" name="denominacion{{denom.denominacion}}" (input)="calcularTotal()">
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
 
-            <!-- Column for other fields -->
-            <div class="col-lg-6">
-              <div class="card mb-3">
-                <div class="card-header">Responsable y Caja</div>
-                <div class="card-body">
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Responsable</span>
-                    <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre">
-                  </div>
+                          <!-- Column for other fields -->
+                          <div class="col-lg-6">
+                              <div class="card mb-3">
+                                  <div class="card-header">Responsable y Caja</div>
+                                  <div class="card-body">
+                                      <div class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Responsable</span>
+                                          <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre">
+                                      </div>
 
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Numero caja</span>
-                    <input type="number" class="form-control" [(ngModel)]="numeroCaja" name="numeroCaja">
-                  </div>
+                                      <div class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Numero caja</span>
+                                          <input type="number" class="form-control" [(ngModel)]="numeroCaja" name="numeroCaja">
+                                      </div>
 
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Venta Total</span>
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="ventaTotal" name="ventaTotal" (input)="calcularTotal()">
-                  </div>
-                </div>
-              </div>
+                                      <div class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Venta Total</span>
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="ventaTotal" name="ventaTotal" (input)="calcularTotal()">
+                                      </div>
+                                  </div>
+                              </div>
 
-              <div class="card mb-3">
-                <div class="card-header">Transferencias</div>
-                <div class="card-body">
-                  <div *ngFor="let trans of transferencias; let i = index" class="input-group mb-3">
-                    <span class="input-group-text">Transferencia {{i + 1}}</span>
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="transferencias[i].monto" name="transferencia{{i}}" (input)="calcularTotal()">
-                  </div>
-                  <button type="button" class="btn btn-danger mb-3" (click)="agregarTransferencia()">Agregar Transferencia</button>
-                </div>
-              </div>
+                              <div class="card mb-3">
+                                  <div class="card-header">Transferencias</div>
+                                  <div class="card-body">
+                                      <div *ngFor="let trans of transferencias; let i = index" class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Transferencia {{i + 1}}</span>
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="transferencias[i].monto" name="transferencia{{i}}" (input)="calcularTotal()">
+                                      </div>
+                                      <button type="button" class="btn btn-danger mb-3" (click)="agregarTransferencia()">Agregar Transferencia</button>
+                                  </div>
+                              </div>
 
-              <div class="card mb-3">
-                <div class="card-header">Pedidos en tránsito</div>
-                <div class="card-body">
-                  <div *ngFor="let transito of pedidosTransitos; let i = index" class="input-group mb-3">
-                    <span class="input-group-text">Pedido en transito {{i + 1}}</span>
-                    <span class="input-group-text">Descripción</span>
-                    <input type="text" class="form-control" [(ngModel)]="pedidosTransitos[i].descripcion" name="pedidoTransitoDesc{{i}}">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="pedidosTransitos[i].monto" name="pedidoTransito{{i}}" (input)="calcularTotal()">
-                  </div>
-                  <button type="button" class="btn btn-danger mb-3" (click)="agregarPedidoTransito()">Agregar pedido en transito</button>
-                </div>
-              </div>
+                              <div class="card mb-3">
+                                  <div class="card-header">Pedidos en tránsito</div>
+                                  <div class="card-body">
+                                      <div *ngFor="let transito of pedidosTransitos; let i = index" class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Pedido en transito {{i + 1}}</span>
+                                          <span class="input-group-text input-group-text-small">Descripción</span>
+                                          <input type="text" class="form-control" [(ngModel)]="pedidosTransitos[i].descripcion" name="pedidoTransitoDesc{{i}}">
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="pedidosTransitos[i].monto" name="pedidoTransito{{i}}" (input)="calcularTotal()">
+                                      </div>
+                                      <button type="button" class="btn btn-danger mb-3" (click)="agregarPedidoTransito()">Agregar pedido en transito</button>
+                                  </div>
+                              </div>
 
-              <div class="card mb-3">
-                <div class="card-header">Retiros</div>
-                <div class="card-body">
-                  <div *ngFor="let retiro of retiros; let i = index" class="input-group mb-3">
-                    <span class="input-group-text">Retiro {{i + 1}}</span>
-                    <span class="input-group-text">Descripción</span>
-                    <input type="text" class="form-control" [(ngModel)]="retiros[i].descripcion" name="retiroDesc{{i}}">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="retiros[i].monto" name="retiro{{i}}" (input)="calcularTotal()">
-                  </div>
-                  <button type="button" class="btn btn-danger mb-3" (click)="agregarRetiro()">Agregar Retiro</button>
-                </div>
-              </div>
+                              <div class="card mb-3">
+                                  <div class="card-header">Retiros</div>
+                                  <div class="card-body">
+                                      <div *ngFor="let retiro of retiros; let i = index" class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Retiro {{i + 1}}</span>
+                                          <span class="input-group-text input-group-text-small">Descripción</span>
+                                          <input type="text" class="form-control" [(ngModel)]="retiros[i].descripcion" name="retiroDesc{{i}}">
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="retiros[i].monto" name="retiro{{i}}" (input)="calcularTotal()">
+                                      </div>
+                                      <button type="button" class="btn btn-danger mb-3" (click)="agregarRetiro()">Agregar Retiro</button>
+                                  </div>
+                              </div>
 
-              <div class="card mb-3">
-                <div class="card-header">Pagos con tarjeta</div>
-                <div class="card-body">
-                  <div *ngFor="let pago of pagosTarjeta; let i = index" class="input-group mb-3">
-                    <span class="input-group-text">Pago Tarjeta {{i + 1}}</span>
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="pagosTarjeta[i].monto" name="pagoTarjeta{{i}}" (input)="calcularTotal()">
-                  </div>
-                  <button type="button" class="btn btn-danger mb-3" (click)="agregarPagoTarjeta()">Agregar Pago Tarjeta</button>
-                </div>
-              </div>
+                              <div class="card mb-3">
+                                  <div class="card-header">Pagos con tarjeta</div>
+                                  <div class="card-body">
+                                      <div *ngFor="let pago of pagosTarjeta; let i = index" class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Pago Tarjeta {{i + 1}}</span>
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="pagosTarjeta[i].monto" name="pagoTarjeta{{i}}" (input)="calcularTotal()">
+                                      </div>
+                                      <button type="button" class="btn btn-danger mb-3" (click)="agregarPagoTarjeta()">Agregar Pago Tarjeta</button>
+                                  </div>
+                              </div>
 
-              <div class="card mb-3">
-                <div class="card-header">Recargas</div>
-                <div class="card-body">
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Total recargas</span>
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" [(ngModel)]="recargas" name="recargas" (input)="calcularTotal()">
-                  </div>
-                </div>
-              </div>
-            </div>
+                              <div class="card mb-3">
+                                  <div class="card-header">Recargas</div>
+                                  <div class="card-body">
+                                      <div class="input-group mb-3">
+                                          <span class="input-group-text input-group-text-small">Total recargas</span>
+                                          <span class="input-group-text input-group-text-small">$</span>
+                                          <input type="number" class="form-control" [(ngModel)]="recargas" name="recargas" (input)="calcularTotal()">
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Mostrar total calculado y comparación -->
+                      <div class="row mt-4">
+                          <div class="col-lg-6">
+                              <div class="input-group mb-3" style="max-width: 100%;">
+                                  <span class="input-group-text input-group-text-small">Total Calculado</span>
+                                  <span class="input-group-text input-group-text-small">$</span>
+                                  <input type="text" class="form-control" [value]="totalCalculado" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="input-group mb-3" style="max-width: 100%;">
+                                  <span class="input-group-text input-group-text-small">Resultado</span>
+                                  <input type="text" class="form-control" [value]="resultado" readonly>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Botones de acción -->
+                      <div class="row mt-2 text-center">
+                          <div class="col-lg-6">
+                              <button type="submit" class="btn btn-success">Hecho</button>
+                          </div>
+                          <div class="col-lg-6">
+                              <button routerLink="/corte-caja" type="button" class="btn btn-secondary">Regresar</button>
+                          </div>
+                      </div>
+                  </form>
+              </fieldset>
           </div>
-
-          <!-- Mostrar total calculado y comparación -->
-          <div class="row mt-4">
-            <div class="col-lg-6">
-              <div class="input-group mb-3" style="max-width: 100%;">
-                <span class="input-group-text">Total Calculado</span>
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" [value]="totalCalculado" readonly>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="input-group mb-3" style="max-width: 100%;">
-                <span class="input-group-text">Resultado</span>
-                <input type="text" class="form-control" [value]="resultado" readonly>
-              </div>
-            </div>
-          </div>
-
-          <!-- Botones de acción -->
-          <div class="row mt-2 text-center">
-            <div class="col-lg-6">
-              <button type="submit" class="btn btn-success">Hecho</button>
-            </div>
-            <div class="col-lg-6">
-              <button routerLink="/corte-caja" type="button" class="btn btn-secondary">Regresar</button>
-            </div>
-          </div>
-        </form>
-      </fieldset>
-    </div>
+      </div>
   </div>
 </div>

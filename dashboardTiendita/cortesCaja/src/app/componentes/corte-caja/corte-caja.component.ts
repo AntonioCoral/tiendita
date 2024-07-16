@@ -31,9 +31,9 @@ export class CorteCajaComponent implements OnInit {
       corte.totalTransferencias +
       corte.totalPagosTarjeta +
       corte.totalPedidoTransito + // Asegúrate de incluir totalPedidoTransito si existe en tu interfaz
-      corte.totalRetiros;
+      corte.totalRetiros ;
     const totalEgresos = corte.ventaTotal + corte.recargas;
-    return totalEgresos - totalIngresos;
+    return totalIngresos - totalEgresos ;
   }
 
   // Método para actualizar el estado del pedido en tránsito

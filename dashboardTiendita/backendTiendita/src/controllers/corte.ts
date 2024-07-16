@@ -5,9 +5,12 @@ import Denominaciones from '../models/denominaciones';
 import Transferencias from '../models/transferencia';
 import Retiros from '../models/retiros';
 import PagosTarjeta from '../models/pagostarjeta';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { Op } from 'sequelize';
 import PedidosTransitos from '../models/pedidostransito';
+
+// Configurar la zona horaria
+const TIMEZONE = 'America/Mexico_City';
 
 export const createCaja = async (req: Request, res: Response) => {
   const transaction = await db.transaction();
@@ -115,10 +118,10 @@ export const createCaja = async (req: Request, res: Response) => {
 };
 
 export const getCortesByDate = async (req: Request, res: Response) => {
-  const { date } = req.params;  // Usa req.params para obtener la fecha de los parámetros de la ruta
+  const { date } = req.params;  
   try {
-    const startDate = moment(date).startOf('day').toDate();
-    const endDate = moment(date).endOf('day').toDate();
+    const startDate = moment.tz(date, TIMEZONE).startOf('day').toDate();
+    const endDate = moment.tz(date, TIMEZONE).endOf('day').toDate();
     
     const cortes = await Caja.findAll({
       where: {
@@ -146,14 +149,55 @@ export const getCortesByDate = async (req: Request, res: Response) => {
   }
 };
 
+export const getLastCajaNumber = async (req: Request, res: Response) => {
+  const { date } = req.params;
 
+  try {
+    const startOfDay = moment.tz(date, TIMEZONE).startOf('day').toDate();
+    const endOfDay = moment.tz(date, TIMEZONE).endOf('day').toDate();
+
+    const lastCaja = await Caja.findOne({
+      where: {
+        fecha: {
+          [Op.gte]: startOfDay,
+          [Op.lte]: endOfDay
+        }
+      },
+      order: [['numeroCaja', 'DESC']]
+    });
+    const lastCajaNumber = lastCaja ? lastCaja.numeroCaja : 0;
+    res.json({ lastCajaNumber });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error fetching last caja number' });
+  }
+};
+
+export const checkCajaNumberExists = async (req: Request, res: Response) => {
+  const { cajaNumber } = req.params;
+  try {
+    const caja = await Caja.findOne({
+      where: {
+        numeroCaja: cajaNumber
+      }
+    });
+
+    if (caja) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error checking caja number' });
+  }
+};
 
 export const actualizarPedidoTransito = async (req: Request, res:Response) => {
   const { cajaId, pedidoId } = req.params;
   const { estatus } = req.body;
 
   try {
-    // Busca el pedido en tránsito por su ID y el ID de la caja
     const pedido = await PedidosTransitos.findOne({ 
       where: { 
         id: pedidoId,
@@ -161,20 +205,16 @@ export const actualizarPedidoTransito = async (req: Request, res:Response) => {
       } 
     });
 
-    // Si no se encuentra el pedido, devuelve un error 404
     if (!pedido) {
       return res.status(404).json({ error: 'Pedido en tránsito no encontrado' });
     }
 
-    // Actualiza el estado del pedido
     pedido.estatus = estatus;
-    await pedido.save(); // Guarda los cambios en la base de datos
+    await pedido.save(); 
 
-    // Devuelve el pedido actualizado como respuesta
     res.json(pedido);
   } catch (error) {
     console.error("Error al actualizar el pedido en tránsito:", error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-

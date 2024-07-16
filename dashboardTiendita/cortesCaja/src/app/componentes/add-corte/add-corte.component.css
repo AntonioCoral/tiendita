@@ -16,6 +16,11 @@
   .card:hover {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
+  .input-group-text-small {
+    width: auto; /* Ajusta automáticamente al contenido */
+    padding: 0.375rem 0.75rem; /* Ajusta el relleno si es necesario */
+    font-size: 0.875rem; /* Reduce el tamaño de la fuente */
+  }
   
   /* Estilos para los botones */
   .btn-primary {
@@ -50,7 +55,7 @@
     background-color: #5a6268;
     border-color: #545b62;
   }
-  
+
   /* Animaciones para los inputs */
   .input-group-text,
   .form-control {

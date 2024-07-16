@@ -12,16 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.actualizarPedidoTransito = exports.getCortesByDate = exports.createCaja = void 0;
+exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
 const conecction_1 = __importDefault(require("../db/conecction"));
 const caja_1 = __importDefault(require("../models/caja"));
 const denominaciones_1 = __importDefault(require("../models/denominaciones"));
 const transferencia_1 = __importDefault(require("../models/transferencia"));
 const retiros_1 = __importDefault(require("../models/retiros"));
 const pagostarjeta_1 = __importDefault(require("../models/pagostarjeta"));
-const moment_1 = __importDefault(require("moment"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const sequelize_1 = require("sequelize");
 const pedidostransito_1 = __importDefault(require("../models/pedidostransito"));
+// Configurar la zona horaria
+const TIMEZONE = 'America/Mexico_City';
 const createCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const transaction = yield conecction_1.default.transaction();
     try {
@@ -120,10 +122,10 @@ const createCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createCaja = createCaja;
 const getCortesByDate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { date } = req.params; // Usa req.params para obtener la fecha de los parámetros de la ruta
+    const { date } = req.params;
     try {
-        const startDate = (0, moment_1.default)(date).startOf('day').toDate();
-        const endDate = (0, moment_1.default)(date).endOf('day').toDate();
+        const startDate = moment_timezone_1.default.tz(date, TIMEZONE).startOf('day').toDate();
+        const endDate = moment_timezone_1.default.tz(date, TIMEZONE).endOf('day').toDate();
         const cortes = yield caja_1.default.findAll({
             where: {
                 fecha: {
@@ -152,25 +154,65 @@ const getCortesByDate = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getCortesByDate = getCortesByDate;
+const getLastCajaNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { date } = req.params;
+    try {
+        const startOfDay = moment_timezone_1.default.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment_timezone_1.default.tz(date, TIMEZONE).endOf('day').toDate();
+        const lastCaja = yield caja_1.default.findOne({
+            where: {
+                fecha: {
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
+                }
+            },
+            order: [['numeroCaja', 'DESC']]
+        });
+        const lastCajaNumber = lastCaja ? lastCaja.numeroCaja : 0;
+        res.json({ lastCajaNumber });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching last caja number' });
+    }
+});
+exports.getLastCajaNumber = getLastCajaNumber;
+const checkCajaNumberExists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cajaNumber } = req.params;
+    try {
+        const caja = yield caja_1.default.findOne({
+            where: {
+                numeroCaja: cajaNumber
+            }
+        });
+        if (caja) {
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error checking caja number' });
+    }
+});
+exports.checkCajaNumberExists = checkCajaNumberExists;
 const actualizarPedidoTransito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { cajaId, pedidoId } = req.params;
     const { estatus } = req.body;
     try {
-        // Busca el pedido en tránsito por su ID y el ID de la caja
         const pedido = yield pedidostransito_1.default.findOne({
             where: {
                 id: pedidoId,
                 cajaId: cajaId
             }
         });
-        // Si no se encuentra el pedido, devuelve un error 404
         if (!pedido) {
             return res.status(404).json({ error: 'Pedido en tránsito no encontrado' });
         }
-        // Actualiza el estado del pedido
         pedido.estatus = estatus;
-        yield pedido.save(); // Guarda los cambios en la base de datos
-        // Devuelve el pedido actualizado como respuesta
+        yield pedido.save();
         res.json(pedido);
     }
     catch (error) {
