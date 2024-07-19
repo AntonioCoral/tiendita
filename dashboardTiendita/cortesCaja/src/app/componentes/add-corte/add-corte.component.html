@@ -12,7 +12,7 @@
                                   <div class="card-header">Denominaciones</div>
                                   <div class="card-body">
                                       <div *ngFor="let denom of denominaciones; let i = index" class="input-group mb-3">
-                                          <span class="input-group-text input-group-text-small">Denominación {{denom.denominacion}}</span>
+                                          <span class="input-group-text input-group-text-small">$ {{denom.denominacion}}</span>
                                           <span class="input-group-text input-group-text-small">Cantidad</span>
                                           <input type="number" class="form-control" [(ngModel)]="denominaciones[i].cantidad" name="denominacion{{denom.denominacion}}" (input)="calcularTotal()">
                                       </div>
@@ -59,7 +59,7 @@
                                   <div class="card-header">Pedidos en tránsito</div>
                                   <div class="card-body">
                                       <div *ngFor="let transito of pedidosTransitos; let i = index" class="input-group mb-3">
-                                          <span class="input-group-text input-group-text-small">Pedido en transito {{i + 1}}</span>
+                                          <span class="input-group-text input-group-text-small">Pedido {{i + 1}}</span>
                                           <span class="input-group-text input-group-text-small">Descripción</span>
                                           <input type="text" class="form-control" [(ngModel)]="pedidosTransitos[i].descripcion" name="pedidoTransitoDesc{{i}}">
                                           <span class="input-group-text input-group-text-small">$</span>

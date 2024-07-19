@@ -26,7 +26,7 @@ dotenv_1.default.config();
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '443';
+        this.port = process.env.PORT || '500';
         this.server = http_1.default.createServer(this.app);
         this.io = new socket_io_1.Server(this.server, {
             cors: {

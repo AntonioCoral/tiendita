@@ -19,7 +19,7 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || '443';
+        this.port = process.env.PORT || '500';
         this.server = http.createServer(this.app);
         this.io = new SocketIOServer(this.server, {
             cors: {
