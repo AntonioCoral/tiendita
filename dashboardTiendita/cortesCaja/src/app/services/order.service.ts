@@ -50,4 +50,8 @@ export class OrderService {
   checkOrderNumberExists(orderNumber: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.myAppUrl}${this.myApiUrl}checkOrderNumber/${orderNumber}`);
   }
+
+  getPedidosTransito(numeroCaja: number,date: string, startTime: string, endTime: string): Observable<{ efectivo: number, nameClient: string}[]> {
+    return this.http.get<Order[]>(`${this.myAppUrl}${this.myApiUrl}/transito/${numeroCaja}/${date}/${startTime}/${endTime}`);
+  }
 }

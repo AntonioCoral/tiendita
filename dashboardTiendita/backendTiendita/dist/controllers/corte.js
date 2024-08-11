@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
+exports.getTransferenciasByCajaAndDate = exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
 const conecction_1 = __importDefault(require("../db/conecction"));
 const caja_1 = __importDefault(require("../models/caja"));
 const denominaciones_1 = __importDefault(require("../models/denominaciones"));
@@ -22,6 +22,7 @@ const pagostarjeta_1 = __importDefault(require("../models/pagostarjeta"));
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const sequelize_1 = require("sequelize");
 const pedidostransito_1 = __importDefault(require("../models/pedidostransito"));
+const orden_1 = __importDefault(require("../models/orden"));
 // Configurar la zona horaria
 const TIMEZONE = 'America/Mexico_City';
 const createCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -221,3 +222,29 @@ const actualizarPedidoTransito = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.actualizarPedidoTransito = actualizarPedidoTransito;
+const getTransferenciasByCajaAndDate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { numeroCaja, date } = req.params;
+    try {
+        const startOfDay = moment_timezone_1.default.tz(date, TIMEZONE).startOf('day').toDate();
+        const endOfDay = moment_timezone_1.default.tz(date, TIMEZONE).endOf('day').toDate();
+        const transferencias = yield orden_1.default.findAll({
+            where: {
+                numeroCaja,
+                createdAt: {
+                    [sequelize_1.Op.gte]: startOfDay,
+                    [sequelize_1.Op.lte]: endOfDay
+                },
+                transferenciaPay: {
+                    [sequelize_1.Op.gt]: 0 // Sólo selecciona órdenes con transferencias mayores a 0
+                }
+            },
+            attributes: ['transferenciaPay']
+        });
+        res.json(transferencias);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching transferencias' });
+    }
+});
+exports.getTransferenciasByCajaAndDate = getTransferenciasByCajaAndDate;

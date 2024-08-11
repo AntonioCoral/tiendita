@@ -183,3 +183,75 @@ export const checkOrderNumberExists = async (req: Request, res: Response) => {
         res.status(500).json({ msg: 'Error checking order number' });
     }
 };
+
+export const getTransferenciasByCajaAndTimeRange = async (req: Request, res: Response) => {
+    const { numeroCaja, date, startTime, endTime } = req.params;
+
+    try {
+       // Combina la fecha y las horas específicas para formar los DateTime correctos en la zona horaria local
+       const startDateTimeLocal = moment.tz(`${date} ${startTime}`, TIMEZONE);
+       const endDateTimeLocal = moment.tz(`${date} ${endTime}`, TIMEZONE);
+
+       // Convierte a UTC para hacer la consulta en la base de datos
+       const startDateTimeUTC = startDateTimeLocal.clone().utc().toDate();
+       const endDateTimeUTC = endDateTimeLocal.clone().utc().toDate();
+
+       console.log('Start DateTime UTC:', startDateTimeUTC);
+       console.log('End DateTime UTC:', endDateTimeUTC);
+
+        const transferencias = await Orden.findAll({
+            where: {
+                numeroCaja,
+                createdAt: {
+                    [Op.gte]: startDateTimeUTC,
+                    [Op.lte]: endDateTimeUTC,
+                },
+                transferenciaPay: {
+                    [Op.gt]: 0 // Sólo selecciona órdenes con transferencias mayores a 0
+                }
+            },
+            attributes: ['transferenciaPay']
+        });
+
+        res.json(transferencias);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching transferencias' });
+    }
+};
+
+
+export const getPedidosTransitoByCajaAndTimeRange = async (req: Request, res: Response) => {
+    const { numeroCaja, date, startTime, endTime } = req.params;
+
+    try {
+        // Combina la fecha y las horas específicas para formar los DateTime correctos en la zona horaria local
+        const startDateTimeLocal = moment.tz(`${date} ${startTime}`, TIMEZONE);
+        const endDateTimeLocal = moment.tz(`${date} ${endTime}`, TIMEZONE);
+
+        // Convierte a UTC para hacer la consulta en la base de datos
+        const startDateTimeUTC = startDateTimeLocal.clone().utc().toDate();
+        const endDateTimeUTC = endDateTimeLocal.clone().utc().toDate();
+
+        console.log('Start DateTime UTC:', startDateTimeUTC);
+        console.log('End DateTime UTC:', endDateTimeUTC);
+
+        const pedidosTransito = await Orden.findAll({
+            where: {
+                numeroCaja,
+                createdAt: {
+                    [Op.gte]: startDateTimeUTC,
+                    [Op.lte]: endDateTimeUTC,
+                },
+                status: 'transito'
+            },
+            attributes: ['efectivo', 'nameClient']
+        });
+
+        console.log('Pedidos en tránsito encontrados:', pedidosTransito.length);
+        res.json(pedidosTransito);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching pedidos en transito' });
+    }
+};

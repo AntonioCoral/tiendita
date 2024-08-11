@@ -31,7 +31,7 @@ export class AddEditOrderComponent implements OnInit {
       direction: ['', Validators.required],
       efectivo: ['', Validators.required],
       montoCompra: ['', Validators.required],
-      transferenciaPay: ['', Validators.required],
+      transferenciaPay: [''],
       recharge: ['']
     });
     this.id = Number(aRouter.snapshot.paramMap.get('id'));

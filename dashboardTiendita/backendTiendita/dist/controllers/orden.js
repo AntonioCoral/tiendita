@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkOrderNumberExists = exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
+exports.getPedidosTransitoByCajaAndTimeRange = exports.getTransferenciasByCajaAndTimeRange = exports.checkOrderNumberExists = exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
 const orden_1 = __importDefault(require("../models/orden"));
 const sequelize_1 = require("sequelize");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
@@ -193,3 +193,66 @@ const checkOrderNumberExists = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.checkOrderNumberExists = checkOrderNumberExists;
+const getTransferenciasByCajaAndTimeRange = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { numeroCaja, date, startTime, endTime } = req.params;
+    try {
+        // Combina la fecha y las horas específicas para formar los DateTime correctos en la zona horaria local
+        const startDateTimeLocal = moment_timezone_1.default.tz(`${date} ${startTime}`, TIMEZONE);
+        const endDateTimeLocal = moment_timezone_1.default.tz(`${date} ${endTime}`, TIMEZONE);
+        // Convierte a UTC para hacer la consulta en la base de datos
+        const startDateTimeUTC = startDateTimeLocal.clone().utc().toDate();
+        const endDateTimeUTC = endDateTimeLocal.clone().utc().toDate();
+        console.log('Start DateTime UTC:', startDateTimeUTC);
+        console.log('End DateTime UTC:', endDateTimeUTC);
+        const transferencias = yield orden_1.default.findAll({
+            where: {
+                numeroCaja,
+                createdAt: {
+                    [sequelize_1.Op.gte]: startDateTimeUTC,
+                    [sequelize_1.Op.lte]: endDateTimeUTC,
+                },
+                transferenciaPay: {
+                    [sequelize_1.Op.gt]: 0 // Sólo selecciona órdenes con transferencias mayores a 0
+                }
+            },
+            attributes: ['transferenciaPay']
+        });
+        res.json(transferencias);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching transferencias' });
+    }
+});
+exports.getTransferenciasByCajaAndTimeRange = getTransferenciasByCajaAndTimeRange;
+const getPedidosTransitoByCajaAndTimeRange = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { numeroCaja, date, startTime, endTime } = req.params;
+    try {
+        // Combina la fecha y las horas específicas para formar los DateTime correctos en la zona horaria local
+        const startDateTimeLocal = moment_timezone_1.default.tz(`${date} ${startTime}`, TIMEZONE);
+        const endDateTimeLocal = moment_timezone_1.default.tz(`${date} ${endTime}`, TIMEZONE);
+        // Convierte a UTC para hacer la consulta en la base de datos
+        const startDateTimeUTC = startDateTimeLocal.clone().utc().toDate();
+        const endDateTimeUTC = endDateTimeLocal.clone().utc().toDate();
+        console.log('Start DateTime UTC:', startDateTimeUTC);
+        console.log('End DateTime UTC:', endDateTimeUTC);
+        const pedidosTransito = yield orden_1.default.findAll({
+            where: {
+                numeroCaja,
+                createdAt: {
+                    [sequelize_1.Op.gte]: startDateTimeUTC,
+                    [sequelize_1.Op.lte]: endDateTimeUTC,
+                },
+                status: 'transito'
+            },
+            attributes: ['efectivo', 'nameClient']
+        });
+        console.log('Pedidos en tránsito encontrados:', pedidosTransito.length);
+        res.json(pedidosTransito);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error fetching pedidos en transito' });
+    }
+});
+exports.getPedidosTransitoByCajaAndTimeRange = getPedidosTransitoByCajaAndTimeRange;

@@ -14,5 +14,7 @@ exports.default = (io) => {
     router.get('/date/:date', orden_2.getOrdenesByDate);
     router.get('/lastOrderNumber/:date', orden_2.getLastOrderNumber);
     router.get('/checkOrderNumber/:orderNumber', orden_1.checkOrderNumberExists);
+    router.get('/transferencias/:numeroCaja/:date/:startTime/:endTime', orden_1.getTransferenciasByCajaAndTimeRange);
+    router.get('/transito/:numeroCaja/:date/:startTime/:endTime', orden_1.getPedidosTransitoByCajaAndTimeRange);
     return router;
 };

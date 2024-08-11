@@ -42,24 +42,18 @@
                     </li>
                 </ul>
 
-                <h4>Retiros</h4>
+                <h4>Retiro-Pago-Tarjeta</h4>
                 <ul>
                     <li *ngFor="let retiro of corte.retiros">
-                        Monto: {{ retiro.monto }} - Descripción: {{ retiro.descripcion }}
+                        Monto: {{ retiro.monto }} - Concepto: {{ retiro.descripcion }}
                     </li>
                 </ul>
 
-                <h4>Pagos con Tarjeta</h4>
-                <ul>
-                    <li *ngFor="let pago of corte.pagosTarjeta">
-                        Monto: {{ pago.monto }}
-                    </li>
-                </ul>
 
                 <h4>Pedidos en Tránsito</h4>
                 <ul>
                     <li *ngFor="let pedido of corte.pedidosTransitos" class="mb-2">
-                        Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }} - Estatus:
+                        Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }} - Estatus: {{pedido.estatus}}
                         <input type="text" [(ngModel)]="pedido.estatus" class="form-control"
                             *ngIf="pedido.id !== undefined && corte.id !== undefined && pedido.estatus !== undefined"
                             (keyup.enter)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus)">

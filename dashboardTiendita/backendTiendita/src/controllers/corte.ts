@@ -8,6 +8,8 @@ import PagosTarjeta from '../models/pagostarjeta';
 import moment from 'moment-timezone';
 import { Op } from 'sequelize';
 import PedidosTransitos from '../models/pedidostransito';
+import Orden from '../models/orden';
+
 
 // Configurar la zona horaria
 const TIMEZONE = 'America/Mexico_City';
@@ -216,5 +218,34 @@ export const actualizarPedidoTransito = async (req: Request, res:Response) => {
   } catch (error) {
     console.error("Error al actualizar el pedido en tránsito:", error);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
+export const getTransferenciasByCajaAndDate = async (req: Request, res: Response) => {
+  const { numeroCaja, date } = req.params;
+
+  try {
+      const startOfDay = moment.tz(date, TIMEZONE).startOf('day').toDate();
+      const endOfDay = moment.tz(date, TIMEZONE).endOf('day').toDate();
+
+      const transferencias = await Orden.findAll({
+          where: {
+              numeroCaja,
+              createdAt: {
+                  [Op.gte]: startOfDay,
+                  [Op.lte]: endOfDay
+              },
+              transferenciaPay: {
+                  [Op.gt]: 0 // Sólo selecciona órdenes con transferencias mayores a 0
+              }
+          },
+          attributes: ['transferenciaPay']
+      });
+
+      res.json(transferencias);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ msg: 'Error fetching transferencias' });
   }
 };

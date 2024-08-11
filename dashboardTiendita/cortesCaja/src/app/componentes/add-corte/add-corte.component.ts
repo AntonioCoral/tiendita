@@ -1,14 +1,18 @@
-import { CorteCaja, Denominacion, Transferencia, Retiro, PagoTarjeta, PedidosTransitos } from './../../interfaces/corte';
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { TransferenciaService } from 'src/app/services/transferencia.service';
 import { CorteCajaService } from 'src/app/services/corte.service';
+import { OrderService } from 'src/app/services/order.service';
+import { Transferencia, CorteCaja, Denominacion, Retiro, PagoTarjeta, PedidosTransitos } from 'src/app/interfaces/corte';
+import { Order } from 'src/app/interfaces/order';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-corte',
   templateUrl: './add-corte.component.html',
   styleUrls: ['./add-corte.component.css']
 })
-export class AddCorteComponent {
+export class AddCorteComponent implements OnInit {
   nombre: string = '';
   numeroCaja: number = 0;
   totalEfectivo: number = 0;
@@ -31,21 +35,75 @@ export class AddCorteComponent {
     { denominacion: 1, cantidad: 0 },
     { denominacion: 0.50, cantidad: 0 }
   ];
-  transferencias: Transferencia[] = [{ monto: 0 }];
+  transferencias: Transferencia[] = [];
   retiros: Retiro[] = [{ monto: 0, descripcion: '' }];
   pagosTarjeta: PagoTarjeta[] = [{ monto: 0 }];
-  pedidosTransitos: PedidosTransitos[] = [{ monto: 0, descripcion: '', estatus: '' }];
+  pedidosTransitos: PedidosTransitos[] = [];
   totalCalculado: number = 0;
   resultado: string = '';
+  startTime: string = '07:00'; // Hora de inicio predeterminada
+  endTime: string = '15:00'; // Hora de fin predeterminada
 
-  constructor(private corteService: CorteCajaService, private router: Router) {}
+  constructor(
+    private corteService: CorteCajaService,
+    private transferenciaService: TransferenciaService,
+    private orderService: OrderService,
+    private router: Router,
+    private datePipe: DatePipe,
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarTransferencias();
+    this.cargarPedidosTransito();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  }
+
+  cargarTransferencias(): void {
+    const today = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!; // Formato de fecha 'YYYY-MM-DD'
+    this.transferenciaService.getTransferencias(this.numeroCaja, today, this.startTime, this.endTime).subscribe(
+      (transferencias) => {
+        this.transferencias = transferencias.map(t => ({ monto: t.transferenciaPay }));
+        this.calcularTotal();
+      },
+      (error) => {
+        console.error('Error cargando transferencias:', error);
+      }
+    );
+  }
+
+  cargarPedidosTransito(): void {
+    const today = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!; // Formato de fecha 'YYYY-MM-DD'
+    this.orderService.getPedidosTransito(this.numeroCaja, today, this.startTime, this.endTime).subscribe(
+      (pedidos) => {
+        this.pedidosTransitos = pedidos.map(p => ({
+          monto: p.efectivo, 
+          descripcion: p.nameClient
+        }));
+        this.calcularTotal();
+      },
+      (error) => {
+        console.error('Error cargando pedidos en tránsito:', error);
+      }
+    );
+  }
+
+  onNumeroCajaChange(): void {
+    this.cargarTransferencias();
+    this.cargarPedidosTransito();
+  }
 
   agregarTransferencia() {
     this.transferencias.push({ monto: 0 });
   }
 
   agregarRetiro() {
-    this.retiros.push({ monto: 0 });
+    this.retiros.push({ monto: 0, descripcion: '' });
   }
 
   agregarPagoTarjeta() {
@@ -53,23 +111,23 @@ export class AddCorteComponent {
   }
 
   agregarPedidoTransito() {
-    this.pedidosTransitos.push({ monto: 0 });
+    this.pedidosTransitos.push({ monto: 0, descripcion: '' });
   }
 
   calcularTotal() {
     // Calcula el total de denominaciones
     const totalDenominaciones = this.denominaciones.reduce((acc, denom) => acc + (denom.denominacion * denom.cantidad), 0);
     this.totalEfectivo = totalDenominaciones; // Asigna el total de denominaciones a totalEfectivo
-  
+
     // Calcula los totales de otros campos
     const totalTransferencias = this.transferencias.reduce((acc, trans) => acc + trans.monto, 0);
     const totalRetiros = this.retiros.reduce((acc, retiro) => acc + retiro.monto, 0);
     const totalPagosTarjeta = this.pagosTarjeta.reduce((acc, pago) => acc + pago.monto, 0);
     const totalPedidoTransitos = this.pedidosTransitos.reduce((acc, pedido) => acc + pedido.monto, 0);
-  
+
     // Calcula el total calculado y la diferencia
     this.totalCalculado = totalDenominaciones + totalTransferencias + totalRetiros + totalPagosTarjeta + totalPedidoTransitos - this.recargas;
-  
+
     if (this.totalCalculado > this.ventaTotal) {
       this.resultado = `Sobra $${this.totalCalculado - this.ventaTotal}`;
     } else if (this.totalCalculado < this.ventaTotal) {
@@ -78,7 +136,6 @@ export class AddCorteComponent {
       this.resultado = 'Todo cuadra';
     }
   }
-  
 
   onSubmit() {
     const denominacionesCorte: Denominacion[] = this.denominaciones.filter(denom => denom && denom.denominacion != null && denom.cantidad != null);

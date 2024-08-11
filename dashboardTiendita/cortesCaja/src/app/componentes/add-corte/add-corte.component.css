@@ -1,6 +1,6 @@
 /* Estilos para las tarjetas */
 .card-header {
-    background-color: #007bff;
+    background-color: #266bb6;
     color: white;
     font-weight: bold;
     transition: background-color 0.3s ease;
@@ -64,8 +64,8 @@
   
   .form-control:focus {
     background-color: #e9f7ff;
-    border-color: #007bff;
-    color: #007bff;
+    border-color: #2f5b8a;
+    color: #244b75;
   }
   
   .input-group-text {
