@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/interfaces/order';
+import { SocketService } from 'src/app/services/conexion.service';
 import * as moment from 'moment';
 
 @Component({
@@ -22,6 +23,7 @@ export class AddEditOrderComponent implements OnInit {
     private _orderService: OrderService,
     private router: Router,
     private toastr: ToastrService,
+    private socketService: SocketService,
     private aRouter: ActivatedRoute
   ) {
     this.form = this.fb.group({
@@ -32,21 +34,13 @@ export class AddEditOrderComponent implements OnInit {
       efectivo: ['', Validators.required],
       montoCompra: ['', Validators.required],
       transferenciaPay: [''],
-      recharge: ['']
+      recharge: [''],
+      montoServicio: [{ value: '', disabled: true }] 
     });
     this.id = Number(aRouter.snapshot.paramMap.get('id'));
   }
 
   ngOnInit(): void {
-    this.aRouter.queryParams.subscribe(params => {
-      if (params['nombre'] && params['direction']) {
-        this.form.patchValue({
-          nameClient: params['nombre'],
-          direction: params['direction']
-        });
-      }
-    });
-
     if (this.id != 0) {
       this.operacion = 'Editar ';
       this.getOrden(this.id);
@@ -56,7 +50,6 @@ export class AddEditOrderComponent implements OnInit {
     }
   }
   
-
   getOrden(id: number) {
     this.loading = true;
     this._orderService.getOrder(id).subscribe((data: Order) => {
@@ -69,10 +62,12 @@ export class AddEditOrderComponent implements OnInit {
         efectivo: data.efectivo,
         montoCompra: data.montoCompra,
         transferenciaPay: data.transferenciaPay,
-        recharge: data.recharge
+        recharge: data.recharge,
+        montoServicio: data.montoServicio || ''
       });
     });
   }
+
   generateRandomOrderNumber() {
     const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
     this._orderService.checkOrderNumberExists(randomOrderNumber).subscribe(exists => {
@@ -86,41 +81,57 @@ export class AddEditOrderComponent implements OnInit {
   }
 
   addOrden() {
-    // Asegúrate de que el número de orden esté generado antes de agregar la orden
     if (!this.form.value.numerOrden) {
-      this.generateRandomOrderNumber();
-      return;
+        this.generateRandomOrderNumber();
+        return;
     }
+
     const orden: Order = {
-      numerOrden: this.form.value.numerOrden,
-      numeroCaja: this.form.value.numeroCaja,
-      nameClient: this.form.value.nameClient,
-      direction: this.form.value.direction,
-      efectivo: this.form.value.efectivo,
-      montoCompra: this.form.value.montoCompra,
-      transferenciaPay: this.form.value.transferenciaPay,
-      recharge: this.form.value.recharge
+        numerOrden: this.form.value.numerOrden,
+        numeroCaja: this.form.value.numeroCaja,
+        nameClient: this.form.value.nameClient,
+        direction: this.form.value.direction,
+        efectivo: this.form.value.efectivo,
+        montoCompra: this.form.value.montoCompra,
+        transferenciaPay: this.form.value.transferenciaPay,
+        recharge: this.form.value.recharge,
+        montoServicio: this.form.value.montoServicio
     };
 
     const today = moment().format('YYYY-MM-DD');
 
     if (this.id !== 0) {
-      this.loading = true;
-      this._orderService.updateOrden(this.id, orden).subscribe(() => {
-        this.loading = false;
-        this.toastr.success(`La orden de ${orden.nameClient} fue actualizada con éxito`);
-        this.router.navigate(['/list-orders']);
-      });
-    } else {
-      this.loading = true;
-      this._orderService.getLastOrderNumber(today).subscribe(({ lastOrderNumber }) => {
-        orden.numerOrden = lastOrderNumber + 1;
-        this._orderService.saveOrder(orden).subscribe(() => {
-          this.loading = false;
-          this.toastr.success(`La orden de ${orden.nameClient} fue registrada con éxito`);
-          this.router.navigate(['/list-orders']);
+        this.loading = true;
+        this._orderService.updateOrden(this.id, orden).subscribe(() => {
+            this.loading = false;
+            this.toastr.success(`La orden de ${orden.nameClient} fue actualizada con éxito`);
+            this.socketService.onOrderUpdated();
+            this.router.navigate(['/list-orders'], { state: { scrollPosition: history.state.scrollPosition || 0 } });
         });
-      });
+    } else {
+        this.loading = true;
+        this._orderService.getLastOrderNumber(today).subscribe(({ lastOrderNumber }) => {
+            orden.numerOrden = lastOrderNumber + 1;
+            this._orderService.saveOrder(orden).subscribe(() => {
+                this.loading = false;
+                this.toastr.success(`La orden de ${orden.nameClient} fue registrada con éxito`);
+                this.socketService.emitOrderAdded(orden);
+                this.router.navigate(['/list-orders'], { state: { scrollPosition: history.state.scrollPosition || 0 } });
+            });
+        });
     }
   }
+  onServiceTypeChange(event: Event): void {
+    const selectedService = (event.target as HTMLSelectElement).value;
+    const montoServicioControl = this.form.get('montoServicio');
+  
+    if (selectedService === '') {
+      montoServicioControl?.setValue('');
+      montoServicioControl?.disable();
+    } else {
+      montoServicioControl?.enable();
+    }
+  }
+  
+  
 }

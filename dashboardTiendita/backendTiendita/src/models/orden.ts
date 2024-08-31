@@ -27,8 +27,11 @@ const Orden = db.define('Orden', {
     nameDelivery: {
         type: DataTypes.STRING
     },
-    recharge: {
+    recharge: { //servicio como recarga o retiro efec
         type: DataTypes.STRING
+    },
+    montoServicio: {
+        type: DataTypes.DOUBLE
     },
     status: {
         type: DataTypes.STRING

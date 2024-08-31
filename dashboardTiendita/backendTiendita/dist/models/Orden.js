@@ -42,6 +42,9 @@ const Orden = conecction_1.default.define('Orden', {
     recharge: {
         type: sequelize_1.DataTypes.STRING
     },
+    montoServicio: {
+        type: sequelize_1.DataTypes.DOUBLE
+    },
     status: {
         type: sequelize_1.DataTypes.STRING
     },

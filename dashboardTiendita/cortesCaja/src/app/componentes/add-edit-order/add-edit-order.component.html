@@ -29,7 +29,7 @@
                                 </span>
                               </div>
                             <div>
-                              <label for="client" class="form-label mt-2">Direction</label>
+                              <label for="client" class="form-label mt-2">Dirección</label>
                               <input formControlName="direction" type="text" class="form-control" id="direction" aria-describedby="emailHelp" placeholder="Dirección">
                               <span *ngIf="form.get('direction')?.hasError('required')&& form.get('direction')?.touched">
                                 El campo es <strong>requerido</strong>
@@ -57,10 +57,23 @@
                                 </span>
                             </div>
                             <div>
-                                <label for="client" class="form-label mt-2">Servicio</label>
-                                <input formControlName="recharge" type="text" class="form-control" id="recharge" aria-describedby="emailHelp" placeholder="Recarga">
-                                
+                              <label for="recharge" class="form-label mt-2">Servicio</label>
+                              <select formControlName="recharge" id="recharge" class="form-control" (change)="onServiceTypeChange($event)">
+                                <option value="">Ninguno</option>
+                                <option value="Retiro en efectivo">Retiro en efectivo</option>
+                                <option value="Recarga">Recarga</option>
+                              </select>
                             </div>
+                            
+                            <!-- Monto de Servicio, que solo se muestra si se selecciona un servicio -->
+                            <div *ngIf="form.get('recharge')?.value !== ''">
+                              <label for="montoServicio" class="form-label mt-2">Monto de Servicio</label>
+                              <input formControlName="montoServicio" type="number" class="form-control" id="montoServicio" placeholder="Monto del servicio">
+                              <span *ngIf="form.get('montoServicio')?.hasError('required') && form.get('montoServicio')?.touched">
+                                El campo es <strong>requerido</strong>
+                              </span>
+                            </div>
+                            
                             
                               <div class="row mt-2 text-center">
                                 <div class="col-lg-6">

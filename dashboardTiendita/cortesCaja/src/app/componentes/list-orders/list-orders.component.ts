@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Order } from 'src/app/interfaces/order';
@@ -19,17 +19,29 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
   authCredentials = { username: '', password: '' };
   selectedOrderId: number | undefined;
 
+  // Referencia al contenedor de la lista de órdenes
+  @ViewChild('ordersContainer') ordersContainer!: ElementRef;
+
   constructor(
     private _orderService: OrderService,
     private toastr: ToastrService,
     private datePipe: DatePipe,
     private socketService: SocketService,
+    private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.selectedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
     this.getListOrdenes();
+
+    // Restaurar la posición de desplazamiento si existe en el estado de navegación
+    if (history.state.scrollPosition) {
+        setTimeout(() => {
+            this.ordersContainer.nativeElement.scrollTop = history.state.scrollPosition;
+        }, 0);
+    }
+
     this.listenForNewOrders();
     this.listenForUpdatedOrders();
     this.listenForDeletedOrders();
@@ -49,7 +61,8 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     this.loading = true;
     this._orderService.deleteOrden(id).subscribe(() => {
       this.toastr.warning('La orden fue eliminada', 'Orden eliminada');
-      this.getListOrdenes();
+      this.listOrder = this.listOrder.filter(order => order.id !== id); // Actualizar la lista localmente
+      this.loading = false;
     });
   }
 
@@ -62,7 +75,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       console.error('ID is undefined');
       return;
     }
-    const scrollPosition = window.scrollY;
+    const scrollPosition = this.ordersContainer.nativeElement.scrollTop;
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.nameDelivery = repartidor;
       this._orderService.updateOrden(id, order).subscribe(() => {
@@ -71,7 +84,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
         if (index !== -1) {
           this.listOrder[index].nameDelivery = repartidor;
         }
-        window.scrollTo(0, scrollPosition);
+        this.ordersContainer.nativeElement.scrollTop = scrollPosition;
       });
     });
   }
@@ -81,7 +94,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       console.error('ID is undefined');
       return;
     }
-    const scrollPosition = window.scrollY;
+    const scrollPosition = this.ordersContainer.nativeElement.scrollTop;
     this._orderService.getOrder(id).subscribe((order: Order) => {
       order.status = status;
       this._orderService.updateOrden(id, order).subscribe(() => {
@@ -90,7 +103,9 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
         if (index !== -1) {
           this.listOrder[index].status = status;
         }
-        window.scrollTo(0, scrollPosition);
+        setTimeout(() => {
+          this.ordersContainer.nativeElement.scrollTop = scrollPosition;
+        }, 0);
       });
     });
   }
@@ -98,10 +113,13 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
   listenForNewOrders() {
     this.socketService.onOrderAdded().subscribe((order: Order) => {
       console.log('Nueva orden recibida:', order);
-      this.listOrder.push(order);
+      this.listOrder.push(order);  // Agregar la nueva orden directamente a la lista sin recargar la página
       this.toastr.success('Nueva orden agregada', 'Orden añadida');
+      
+      this.cdr.detectChanges();  // Forzar la detección de cambios para que se apliquen las clases
     });
   }
+  
 
   listenForUpdatedOrders() {
     this.socketService.onOrderUpdated().subscribe((order: Order) => {
@@ -149,4 +167,30 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
       this.toastr.error('Usuario o contraseña incorrectos');
     }
   }
+
+  scrollToLastOrder() {
+    setTimeout(() => {
+      this.ordersContainer.nativeElement.scrollTop = this.ordersContainer.nativeElement.scrollHeight;
+    }, 0);
+  }
+
+  getCajaClass(numeroCaja: number | undefined): string {
+    if (numeroCaja === undefined) {
+      return '';
+    }
+    switch (numeroCaja) {
+      case 2:
+        return 'caja-amarillo-claro';
+      case 3:
+        return 'caja-azul-claro';
+      case 4:
+        return 'caja-verde-claro';
+      case 5:
+        return 'caja-morado-claro';
+      default:
+        return '';
+    }
+  }
+  
+  
 }

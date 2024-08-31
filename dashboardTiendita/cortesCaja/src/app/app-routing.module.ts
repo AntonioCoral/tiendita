@@ -10,6 +10,8 @@ import { DeliveryOrdersComponent } from './componentes/delivery-orders/delivery-
 import { OrdersByDateComponent } from './componentes/orders-by-date/orders-by-date.component';
 import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.component';
 import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
+import { AddCategoryComponent } from './componentes/admin-categories/admin-categories.component';
+import { AdminProductsComponent } from './componentes/admin-products/admin-products.component';
 
 
 const routes: Routes = [
@@ -21,7 +23,10 @@ const routes: Routes = [
   { path: 'corte-caja', component: CorteCajaComponent},
   { path: 'addcorte', component: AddCorteComponent},
   { path: 'orders-by-date', component: OrdersByDateComponent },
+  { path: 'admin-categories', component: AddCategoryComponent },
+  { path: 'admin-products', component: AdminProductsComponent },
   { path: '**', redirectTo:'', pathMatch: 'full'},
+  
 ];
 
 @NgModule({

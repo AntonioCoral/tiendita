@@ -36,7 +36,7 @@ export class SocketService {
     });
   }
 
-  onOrderUpdated(): Observable<Order> {
+  onOrderUpdated(): Observable<Order> {  // Eliminado el argumento innecesario
     return new Observable<Order>(observer => {
       this.socket.on('orderUpdated', (order: Order) => {
         observer.next(order);
@@ -51,9 +51,8 @@ export class SocketService {
       });
     });
   }
+
   emitOrderAdded(order: Order) {
     this.socket.emit('orderAdded', order);
   }
-
-
 }

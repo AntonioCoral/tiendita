@@ -1,0 +1,19 @@
+<!-- src/app/components/add-category/add-category.component.html -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="text-center">Agregar Categoría</h2>
+        <form [formGroup]="form" (ngSubmit)="addCategory()">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre de la Categoría</label>
+            <input type="text" id="name" formControlName="name" class="form-control">
+            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">
+              El nombre es requerido.
+            </div>
+          </div>
+          <button [disabled]="loading" class="btn btn-primary w-100">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

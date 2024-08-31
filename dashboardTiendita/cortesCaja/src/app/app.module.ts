@@ -30,6 +30,8 @@ import { NavbarComponent } from './componentes/navbar/navbar.component';
 import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.component';
 import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
+import { AddCategoryComponent } from './componentes/admin-categories/admin-categories.component';
+import { AdminProductsComponent } from './componentes/admin-products/admin-products.component';
 
 
 
@@ -47,7 +49,9 @@ import { ClientesComponent } from './componentes/clientes/clientes.component';
     OrdersByDateComponent,
     CorteCajaComponent,
     AddCorteComponent,
-    ClientesComponent
+    ClientesComponent,
+    AddCategoryComponent,
+    AdminProductsComponent,
   ],
   imports: [
     BrowserModule,
