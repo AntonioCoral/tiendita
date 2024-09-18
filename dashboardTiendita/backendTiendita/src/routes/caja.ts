@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { actualizarPedidoTransito, createCaja, getCortesByDate, getTransferenciasByCajaAndDate } from '../controllers/corte';
+import { actualizarPedidoTransito, createCaja, getCortesByDate, getTransferenciasByCajaAndDate, getUltimoCorteByCaja } from '../controllers/corte';
 
 const router = Router();
 
@@ -7,5 +7,6 @@ const router = Router();
     router.get('/date/:date', getCortesByDate);
     router.put('/:cajaId/pedidos/:pedidoId', actualizarPedidoTransito);
     router.get('/transferencias/:numeroCaja/:date', getTransferenciasByCajaAndDate);
-
+    router.get('/ultimo-corte/:numeroCaja',getUltimoCorteByCaja);
+    
 export default router;

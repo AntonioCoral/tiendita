@@ -12,6 +12,7 @@ import { CorteCajaComponent } from './componentes/corte-caja/corte-caja.componen
 import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
 import { AddCategoryComponent } from './componentes/admin-categories/admin-categories.component';
 import { AdminProductsComponent } from './componentes/admin-products/admin-products.component';
+import { EditProductsComponent } from './componentes/edit-products/edit-products.component';
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'orders-by-date', component: OrdersByDateComponent },
   { path: 'admin-categories', component: AddCategoryComponent },
   { path: 'admin-products', component: AdminProductsComponent },
+  { path: 'edit-product/:id', component: EditProductsComponent },
   { path: '**', redirectTo:'', pathMatch: 'full'},
   
 ];

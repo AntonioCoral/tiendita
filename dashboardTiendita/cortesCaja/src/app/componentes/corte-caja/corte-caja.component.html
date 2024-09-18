@@ -17,7 +17,8 @@
         <h3 class="text-center">Cortes para {{ selectedDate | date: 'yyyy-MM-dd' }}</h3>
         <div *ngFor="let corte of cortes" class="card mb-3">
             <div class="card-header">
-                Corte ID: {{ corte.id }} - Fecha: {{ corte.fecha | date: 'yyyy-MM-dd' }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
+                Corte ID: {{ corte.id }} - Fecha: {{ corte.createdAt | date: 'short'  }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
+                
             </div>
             <div class="card-body">
                 <p>Total Efectivo: {{ corte.totalEfectivo }}</p>

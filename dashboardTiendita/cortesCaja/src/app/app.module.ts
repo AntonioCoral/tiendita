@@ -32,6 +32,7 @@ import { AddCorteComponent } from './componentes/add-corte/add-corte.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
 import { AddCategoryComponent } from './componentes/admin-categories/admin-categories.component';
 import { AdminProductsComponent } from './componentes/admin-products/admin-products.component';
+import { EditProductsComponent } from './componentes/edit-products/edit-products.component';
 
 
 
@@ -52,6 +53,7 @@ import { AdminProductsComponent } from './componentes/admin-products/admin-produ
     ClientesComponent,
     AddCategoryComponent,
     AdminProductsComponent,
+    EditProductsComponent,
   ],
   imports: [
     BrowserModule,

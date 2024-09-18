@@ -7,6 +7,7 @@ export interface IProduct {
     stock: number;
     barcode: string;
     image?: string;
+    options: IProductOption[];
     categoryId: number;
     productId?: number;
   }

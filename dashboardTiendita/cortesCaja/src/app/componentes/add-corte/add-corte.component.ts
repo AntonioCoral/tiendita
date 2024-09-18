@@ -22,6 +22,7 @@ export class AddCorteComponent implements OnInit {
   totalPedidoTransito: number = 0;
   ventaTotal: number = 0;
   recargas: number = 0;
+  ultimoCorte: CorteCaja | null = null;//Almacena el ultimo corte de la caja
   denominaciones: Denominacion[] = [
     { denominacion: 1000, cantidad: 0 },
     { denominacion: 500, cantidad: 0 },
@@ -55,6 +56,19 @@ export class AddCorteComponent implements OnInit {
   ngOnInit(): void {
     this.cargarTransferencias();
     this.cargarPedidosTransito();
+   
+  }
+  // Cargar el último corte de la caja seleccionada
+  obtenerUltimoCorte(): void {
+    this.corteService.getUltimoCorteByCaja(this.numeroCaja).subscribe(
+      (ultimoCorte: CorteCaja) => {
+        this.ultimoCorte = ultimoCorte;
+      },
+      (error) => {
+        console.error('Error al obtener el último corte:', error);
+        this.ultimoCorte = null; // Si no hay corte, reseteamos la variable
+      }
+    );
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -96,6 +110,8 @@ export class AddCorteComponent implements OnInit {
   onNumeroCajaChange(): void {
     this.cargarTransferencias();
     this.cargarPedidosTransito();
+    this.obtenerUltimoCorte();
+    
   }
 
   agregarTransferencia() {

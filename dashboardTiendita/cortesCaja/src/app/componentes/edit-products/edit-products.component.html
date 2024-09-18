@@ -1,0 +1,70 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center">Editar Producto</h2>
+        <form [formGroup]="form" (ngSubmit)="updateProduct()">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre del Producto</label>
+            <input type="text" id="name" formControlName="name" class="form-control">
+            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">
+              El nombre es requerido.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="cost" class="form-label">Costo</label>
+            <input type="number" id="cost" formControlName="cost" class="form-control">
+            <div *ngIf="form.get('cost')?.invalid && form.get('cost')?.touched" class="text-danger">
+              El costo es requerido.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" id="price" formControlName="price" class="form-control">
+            <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched" class="text-danger">
+              El precio es requerido.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="stock" class="form-label">Cantidad en Inventario</label>
+            <input type="number" id="stock" formControlName="stock" class="form-control">
+            <div *ngIf="form.get('stock')?.invalid && form.get('stock')?.touched" class="text-danger">
+              La cantidad en inventario es requerida.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="barcode" class="form-label">Código de Barras</label>
+            <input type="text" id="barcode" formControlName="barcode" class="form-control">
+            <div *ngIf="form.get('barcode')?.invalid && form.get('barcode')?.touched" class="text-danger">
+              El código de barras es requerido.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="categoryId" class="form-label">Categoría</label>
+            <select id="categoryId" formControlName="categoryId" class="form-control">
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            <div *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched" class="text-danger">
+              La categoría es requerida.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="image" class="form-label">Imagen del Producto</label>
+            <input type="file" id="image" (change)="onFileSelected($event)" class="form-control">
+          </div>
+   <!-- Importar productos desde Excel -->
+        <div class="mt-5">
+          <h3 class="text-center">Importar Productos desde Excel</h3>
+          <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" class="form-control">
+        </div>
+          <button [disabled]="loading" class="btn btn-primary w-100">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

@@ -7,4 +7,5 @@ router.post('/', corte_1.createCaja);
 router.get('/date/:date', corte_1.getCortesByDate);
 router.put('/:cajaId/pedidos/:pedidoId', corte_1.actualizarPedidoTransito);
 router.get('/transferencias/:numeroCaja/:date', corte_1.getTransferenciasByCajaAndDate);
+router.get('/ultimo-corte/:numeroCaja', corte_1.getUltimoCorteByCaja);
 exports.default = router;

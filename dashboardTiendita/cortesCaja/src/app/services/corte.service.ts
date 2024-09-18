@@ -8,7 +8,7 @@ import { CorteCaja, PedidosTransitos } from '../interfaces/corte';
   providedIn: 'root'
 })
 export class CorteCajaService {
-  private apiUrl = '';
+  private apiUrl = 'http://89.116.50.243:500/api/caja/';
 
   constructor(private http: HttpClient) {}
 
@@ -33,6 +33,10 @@ export class CorteCajaService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  getUltimoCorteByCaja(numeroCaja: number): Observable<CorteCaja> {
+    return this.http.get<CorteCaja>(`${this.apiUrl}/ultimo-corte/${numeroCaja}`);
   }
 
   actualizarEstadoPedido(corteId: number, pedido: PedidosTransitos): Observable<any> {

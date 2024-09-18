@@ -51,6 +51,25 @@
                       <span class="input-group-text input-group-text-small">Hora Fin</span>
                       <input type="time" class="form-control" [(ngModel)]="endTime" name="endTime" (change)="onNumeroCajaChange()">
                     </div>
+
+                     <!-- Card para mostrar el último corte -->
+    <div class="col-md-4">
+      <div class="card" *ngIf="ultimoCorte">
+        <div class="card-header">
+          Último Corte Caja {{ numeroCaja }}
+        </div>
+        <div class="card-body">
+          <p><strong>Fecha del último corte:</strong> {{ ultimoCorte.createdAt | date:'short' }}</p>
+          <p><strong>Total Transferencias:</strong> ${{ ultimoCorte.totalTransferencias }}</p>
+          <!-- Puedes agregar más detalles si lo deseas -->
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay cortes previos -->
+      <div class="alert alert-info" *ngIf="!ultimoCorte">
+        No se encontró ningún corte anterior para la caja {{ numeroCaja }}.
+      </div>
+    </div>
                   </div>
                 </div>
 

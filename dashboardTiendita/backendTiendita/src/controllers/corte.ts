@@ -248,4 +248,29 @@ export const getTransferenciasByCajaAndDate = async (req: Request, res: Response
       console.error(error);
       res.status(500).json({ msg: 'Error fetching transferencias' });
   }
+
+};
+
+// Controlador para obtener el último corte de una caja
+export const getUltimoCorteByCaja = async (req: Request, res: Response) => {
+  const { numeroCaja } = req.params; // Obtener el número de caja desde los parámetros de la URL
+
+  try {
+    // Buscar el último corte de la caja, ordenado por fecha de creación en orden descendente
+    const ultimoCorte = await Caja.findOne({
+      where: { numeroCaja },
+      order: [['createdAt', 'DESC']] // Ordenar por fecha descendente para obtener el último
+    });
+
+    // Si no se encontró ningún corte para esa caja
+    if (!ultimoCorte) {
+      return res.status(404).json({ message: `No se encontró ningún corte anterior para la caja ${numeroCaja}` });
+    }
+
+    // Enviar el último corte encontrado
+    res.json(ultimoCorte);
+  } catch (error) {
+    console.error('Error al obtener el último corte:', error);
+    res.status(500).json({ message: 'Error al obtener el último corte', error });
+  }
 };

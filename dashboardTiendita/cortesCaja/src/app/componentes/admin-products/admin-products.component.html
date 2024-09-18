@@ -1,1 +1,93 @@
-<p>admin-products works!</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center">{{ isEditing ? 'Editar Producto' : 'Agregar Producto' }}</h2>
+
+      <!-- Buscador de productos -->
+      <div class="mb-3">
+        <label for="searchQuery" class="form-label">Buscar Producto</label>
+        <input type="text" id="searchQuery" [(ngModel)]="searchQuery" (keyup.enter)="searchProduct()" class="form-control">
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="addProduct()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre del Producto</label>
+          <input type="text" id="name" formControlName="name" class="form-control">
+          <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">
+            El nombre es requerido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="cost" class="form-label">Costo</label>
+          <input type="number" id="cost" formControlName="cost" class="form-control">
+          <div *ngIf="form.get('cost')?.invalid && form.get('cost')?.touched" class="text-danger">
+            El costo es requerido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="price" class="form-label">Precio</label>
+          <input type="number" id="price" formControlName="price" class="form-control">
+          <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched" class="text-danger">
+            El precio es requerido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="stock" class="form-label">Cantidad en Inventario</label>
+          <input type="number" id="stock" formControlName="stock" class="form-control">
+          <div *ngIf="form.get('stock')?.invalid && form.get('stock')?.touched" class="text-danger">
+            La cantidad en inventario es requerida.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="barcode" class="form-label">Código de Barras</label>
+          <input type="text" id="barcode" formControlName="barcode" class="form-control">
+          <div *ngIf="form.get('barcode')?.invalid && form.get('barcode')?.touched" class="text-danger">
+            El código de barras es requerido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="categoryId" class="form-label">Categoría</label>
+          <select id="categoryId" formControlName="categoryId" class="form-control">
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          </select>
+          <div *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched" class="text-danger">
+            La categoría es requerida.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label">Imagen del Producto</label>
+          <input type="file" id="image" (change)="onFileSelected($event)" class="form-control">
+        </div>
+
+   <!-- Sección para las opciones de precio -->
+   <div formArrayName="options">
+    <div *ngFor="let option of options.controls; let i = index" [formGroupName]="i">
+      <div class="mb-3">
+        <label for="description" class="form-label">Descripción de la Opción {{ i + 1 }}</label>
+        <input type="text" class="form-control" formControlName="description">
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Precio de la Opción {{ i + 1 }}</label>
+        <input type="number" class="form-control" formControlName="price">
+      </div>
+      <button type="button" class="btn btn-danger" (click)="removeOption(i)">Eliminar Opción</button>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="addNewPriceOption()">Agregar Nueva Opción de Precio</button>
+
+
+        <!-- Botón de Guardar/Actualizar -->
+        <button [disabled]="loading" class="btn btn-primary w-100">
+          {{ isEditing ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

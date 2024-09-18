@@ -1,16 +1,15 @@
-// src/app/services/ecommerce.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IProduct,ICategory } from '../interfaces/interface';
+import { IProduct, ICategory, IProductOption } from '../interfaces/interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EcommerceService {
+  
 
-  private apiUrl = 'URL_DE_TU_API'; // Reemplaza esto con la URL real de tu API
+  private apiUrl = 'http://localhost:4500/api'; // Reemplaza esto con la URL real de tu API
 
   constructor(private http: HttpClient) { }
 
@@ -26,7 +25,7 @@ export class EcommerceService {
     return this.http.get<IProduct[]>(`${this.apiUrl}/products`);
   }
 
-  createProduct(product: IProduct): Observable<IProduct> {
+  createProduct(product: FormData): Observable<IProduct> {
     return this.http.post<IProduct>(`${this.apiUrl}/products`, product);
   }
 
@@ -37,4 +36,22 @@ export class EcommerceService {
   searchProducts(query: string): Observable<IProduct[]> {
     return this.http.get<IProduct[]>(`${this.apiUrl}/products/search`, { params: { query } });
   }
+
+  createProductsBulk(products: IProduct[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/products/bulk`, products);
+  }
+  
+  updateProduct(productId: number, productData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/products/${productId}`, productData);
+  }
+
+  
+
+  getProductById(id: number): Observable<IProduct> {
+    return this.http.get<IProduct>(`${this.apiUrl}/products/${id}`);
+  }
+  getProductOptions(): Observable<IProductOption[]> {
+    return this.http.get<IProductOption[]>(`${this.apiUrl}/productOptions`);
+  }
+  
 }

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTransferenciasByCajaAndDate = exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
+exports.getUltimoCorteByCaja = exports.getTransferenciasByCajaAndDate = exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
 const conecction_1 = __importDefault(require("../db/conecction"));
 const caja_1 = __importDefault(require("../models/caja"));
 const denominaciones_1 = __importDefault(require("../models/denominaciones"));
@@ -248,3 +248,25 @@ const getTransferenciasByCajaAndDate = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.getTransferenciasByCajaAndDate = getTransferenciasByCajaAndDate;
+// Controlador para obtener el último corte de una caja
+const getUltimoCorteByCaja = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { numeroCaja } = req.params; // Obtener el número de caja desde los parámetros de la URL
+    try {
+        // Buscar el último corte de la caja, ordenado por fecha de creación en orden descendente
+        const ultimoCorte = yield caja_1.default.findOne({
+            where: { numeroCaja },
+            order: [['createdAt', 'DESC']] // Ordenar por fecha descendente para obtener el último
+        });
+        // Si no se encontró ningún corte para esa caja
+        if (!ultimoCorte) {
+            return res.status(404).json({ message: `No se encontró ningún corte anterior para la caja ${numeroCaja}` });
+        }
+        // Enviar el último corte encontrado
+        res.json(ultimoCorte);
+    }
+    catch (error) {
+        console.error('Error al obtener el último corte:', error);
+        res.status(500).json({ message: 'Error al obtener el último corte', error });
+    }
+});
+exports.getUltimoCorteByCaja = getUltimoCorteByCaja;
