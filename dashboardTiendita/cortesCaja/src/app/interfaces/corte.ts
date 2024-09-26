@@ -34,6 +34,7 @@ export interface PedidosTransitos {
 }
 
 export interface CorteCaja {
+    
     id?: number;
     fecha: Date;
     nombre: String;
@@ -43,6 +44,7 @@ export interface CorteCaja {
     totalRetiros: number;
     totalPagosTarjeta: number;
     totalPedidoTransito: number;
+    totalCalculado: number;
     ventaTotal: number;
     recargas: number;
     denominaciones: Denominacion[];

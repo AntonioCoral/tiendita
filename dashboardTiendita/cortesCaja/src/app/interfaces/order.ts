@@ -12,6 +12,7 @@ export interface Order {
     nameDelivery?: string;
     recharge?: string; //servico ya sea recarga o retiro de efectivo
     montoServicio?: number;
+    itemOrder: string;
     status?: string;
     createdAt?: string | null; 
 

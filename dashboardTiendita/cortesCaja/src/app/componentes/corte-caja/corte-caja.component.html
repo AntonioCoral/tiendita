@@ -17,50 +17,129 @@
         <h3 class="text-center">Cortes para {{ selectedDate | date: 'yyyy-MM-dd' }}</h3>
         <div *ngFor="let corte of cortes" class="card mb-3">
             <div class="card-header">
-                Corte ID: {{ corte.id }} - Fecha: {{ corte.createdAt | date: 'short'  }} - Responsable: {{ corte.nombre }} - Número de caja: {{ corte.numeroCaja }}
-                
+                Corte ID: {{ corte.id }} - Fecha: {{ corte.createdAt | date: 'short'  }} 
             </div>
             <div class="card-body">
-                <p>Total Efectivo: {{ corte.totalEfectivo }}</p>
-                <p>Total Transferencias: {{ corte.totalTransferencias }}</p>
-                <p>Total Retiros: {{ corte.totalRetiros }}</p>
-                <p>Total Pagos con Tarjeta: {{ corte.totalPagosTarjeta }}</p>
-                <p>Venta Total: {{ corte.ventaTotal }}</p>
-                <p>Recargas: {{ corte.recargas }}</p>
-                <p>Diferencia: {{ calcularDiferencia(corte) }}</p>
+                <fieldset>
+                  <form (ngSubmit)="actualizarCorte(corte)">
+                    <div class="row">
+                      <!-- Column for denominaciones -->
+                      <div class="col-lg-6">
+                        <div class="card mb-3">
+                          <div class="card-header">Denominaciones</div>
+                          <div class="card-body">
+                            <!-- Denominaciones -->
+                            <div *ngFor="let denom of corte.denominaciones; let i = index" class="input-group mb-3">
+                                <span class="input-group-text input-group-text-small">$ {{denom.denominacion}}</span>
+                                <span class="input-group-text input-group-text-small">Cantidad</span>
+                                <input type="number" class="form-control" [(ngModel)]="corte.denominaciones[i].cantidad" name="denominacion{{denom.denominacion}}" (input)="calcularTotal()">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
 
-                <h4>Denominaciones</h4>
-                <ul>
-                    <li *ngFor="let denom of corte.denominaciones">
-                        Valor: {{ denom.denominacion }} - Cantidad: {{ denom.cantidad }}
-                    </li>
-                </ul>
+                      <!-- Column for other fields -->
+                      <div class="col-lg-6">
+                        <div class="card mb-3">
+                          <div class="card-header">Responsable y Caja</div>
+                          <div class="card-body">
+                            <div class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Responsable</span>
+                              <input type="text" class="form-control" [(ngModel)]="corte.nombre" name="responsable{{corte.id}}">
+                            </div>
 
-                <h4>Transferencias</h4>
-                <ul>
-                    <li *ngFor="let trans of corte.transferencias">
-                        Monto: {{ trans.monto }}
-                    </li>
-                </ul>
+                            <div class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Numero caja</span>
+                              <input type="number" class="form-control" [(ngModel)]="corte.numeroCaja" name="numeroCaja{{corte.id}}">
+                            </div>
 
-                <h4>Retiro-Pago-Tarjeta</h4>
-                <ul>
-                    <li *ngFor="let retiro of corte.retiros">
-                        Monto: {{ retiro.monto }} - Concepto: {{ retiro.descripcion }}
-                    </li>
-                </ul>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text input-group-text-small">Venta Total</span>
+                                <span class="input-group-text input-group-text-small">$</span>
+                                <input type="number" class="form-control" [(ngModel)]="corte.ventaTotal" name="ventaTotal{{corte.id}}" (input)="calcularTotal()">
+                              </div>
+                          </div>
+                        </div>
 
+                        <div class="card mb-3">
+                          <div class="card-header">Transferencias</div>
+                          <div class="card-body">
+                            <div *ngFor="let trans of corte.transferencias; let i = index" class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Transferencia {{i + 1}}</span>
+                              <span class="input-group-text input-group-text-small">$</span>
+                              <input type="number" class="form-control" [(ngModel)]="corte.transferencias[i].monto" name="transferencia{{i}}" (input)="calcularTotal()">
+                            </div>
+                          </div>
+                        </div>
 
-                <h4>Pedidos en Tránsito</h4>
-                <ul>
-                    <li *ngFor="let pedido of corte.pedidosTransitos" class="mb-2">
-                        Monto: {{ pedido.monto }} - Descripción: {{ pedido.descripcion }} - Estatus: {{pedido.estatus}}
-                        <input type="text" [(ngModel)]="pedido.estatus" class="form-control"
-                            *ngIf="pedido.id !== undefined && corte.id !== undefined && pedido.estatus !== undefined"
-                            (keyup.enter)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus)">
-                        <button class="btn btn-primary btn-sm ml-2" (click)="actualizarEstadoPedido(corte.id!, pedido, pedido.estatus!)">Guardar</button>
-                    </li>
-                </ul>
+                        <div class="card mb-3">
+                          <div class="card-header">Pedidos en tránsito</div>
+                          <div class="card-body">
+                            <div *ngFor="let transito of corte.pedidosTransitos; let i = index" class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Pedido {{i + 1}}</span>
+                              <span class="input-group-text input-group-text-small">Cliente</span>
+                              <input type="text" class="form-control" [(ngModel)]="corte.pedidosTransitos[i].descripcion" name="pedidoTransitoDesc{{i}}">
+                              <span class="input-group-text input-group-text-small">$</span>
+                              <input type="number" class="form-control" [(ngModel)]="corte.pedidosTransitos[i].monto" name="pedidoTransito{{i}}" (input)="calcularTotal()">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card mb-3">
+                          <div class="card-header">Retiro-Pago-Tarjeta</div>
+                          <div class="card-body">
+                            <div *ngFor="let retiro of corte.retiros; let i = index" class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Concepto {{i + 1}}</span>
+                              <span class="input-group-text input-group-text-small">Descripción</span>
+                              <input type="text" class="form-control" [(ngModel)]="corte.retiros[i].descripcion" name="retiroDesc{{i}}">
+                              <span class="input-group-text input-group-text-small">$</span>
+                              <input type="number" class="form-control" [(ngModel)]="corte.retiros[i].monto" name="retiro{{i}}" (input)="calcularTotal()">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card mb-3">
+                          <div class="card-header">Recargas</div>
+                          <div class="card-body">
+                            <div class="input-group mb-3">
+                              <span class="input-group-text input-group-text-small">Total recargas</span>
+                              <span class="input-group-text input-group-text-small">$</span>
+                              <input type="number" class="form-control" [(ngModel)]="corte.recargas" name="recargas{{corte.id}}" (input)="calcularTotal()">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                                    <!-- Mostrar total calculado y comparación -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                        <div class="input-group mb-3" style="max-width: 100%;">
+                            <span class="input-group-text input-group-text-small">Total Calculado</span>
+                            <span class="input-group-text input-group-text-small">$</span>
+                            <input type="text" class="form-control" value={{calcularDiferencia(corte)}} readonly>
+                        </div>
+                        </div>
+                        <div class="col-lg-6">
+                        <div class="input-group mb-3" style="max-width: 100%;">
+                            <span class="input-group-text input-group-text-small">Resultado</span>
+                            <input type="text" class="form-control" [value]="resultado" readonly>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="row mt-2 text-center">
+                      <div class="col-lg-6">
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                      </div>
+                      <div class="col-lg-6">
+                        <button type="button" class="btn btn-secondary" routerLink="/corte-caja">Regresar</button>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
             </div>
         </div>
     </div>

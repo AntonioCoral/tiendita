@@ -1,7 +1,9 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 declare var bootstrap: any;
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -9,8 +11,20 @@ declare var bootstrap: any;
 })
 export class NavbarComponent implements OnInit {
   authCredentials = { username: '', password: '' };
+  passwordVisible = false;
+  loginForm: FormGroup;
 
-  constructor(private router: Router, private toastr: ToastrService, private renderer: Renderer2) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router, 
+    private toastr: ToastrService, 
+    private renderer: Renderer2
+  ) {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {}
 
@@ -32,16 +46,25 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  authenticate() {
-    const { username, password } = this.authCredentials;
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      const { username, password } = this.loginForm.value;
 
-    // Aquí deberías realizar la lógica de autenticación real.
-    if (username === 'admin' && password === 'aljaC0ir') {
-      const authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
-      authModal.hide();
-      this.router.navigate(['/corte-caja']);
-    } else {
-      this.toastr.error('Credenciales incorrectas');
+      // Validación de credenciales
+      if (username === 'admin' && password === 'aljaC0ir') {
+        this.toastr.success('Credenciales correctas');
+        this.router.navigate(['/corte-caja']);
+        // Cerrar el modal después del inicio de sesión exitoso
+        const authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+        authModal.hide();
+      } else {
+        this.toastr.error('Credenciales incorrectas');
+        this.loginForm.reset();  // Reiniciar el formulario después de un error
+      }
     }
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

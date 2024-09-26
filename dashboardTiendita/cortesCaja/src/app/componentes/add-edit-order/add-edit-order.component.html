@@ -7,13 +7,7 @@
                 <div class="form">
                     <form [formGroup]="form" (ngSubmit)="addOrden()">
                         <fieldset>
-                            <div>
-                              <label for="client" class="form-label mt-2">No.Orden</label>
-                              <input formControlName="numerOrden" type="text" class="form-control" id="numerOrden" aria-describedby="emailHelp" placeholder="Numero de orden">
-                              <span *ngIf="form.get('numerOrden')?.hasError('required')&& form.get('numerOrden')?.touched">
-                                El campo es <strong>requerido</strong>
-                            </span>
-                            </div>
+                          
                             <div>
                               <label for="numeroCaja" class="form-label mt-2">Caja</label>
                               <input formControlName="numeroCaja" type="text" class="form-control" id="numeroCaja" aria-describedby="emailHelp" placeholder="Numero de caja">
@@ -73,6 +67,33 @@
                                 El campo es <strong>requerido</strong>
                               </span>
                             </div>
+
+                           <!-- FormArray para agregar bebidas dinámicamente -->
+                           <div>
+<hr>
+                            <div formArrayName="bebidas">
+                              <div *ngFor="let bebida of bebidas.controls; let i = index">
+                                <div [formGroupName]="i" class="mb-2">
+                                  <select formControlName="nombre" class="form-control" (change)="onBebidaChange(i)">
+                                    <option value="">Ninguno</option>
+                                    <option value="Env. RCoca">Env. RCoca</option>
+                                    <option value="Env. RPepsi">Env. RPepsi</option>
+                                    <option value="Env. Cristal 20l">Env. Cristal 20l</option>
+                                    <option value="Env. Agua relle">Env. Agua relle</option>
+                                    <option value="Env. Cerveza">Env. Cerveza</option>
+                                  </select>
+                                  <div *ngIf="bebida.get('nombre')?.value !== ''">
+                                    <label for="cantidad" class="form-label mt-1" >Cantidad</label>
+                                    <input formControlName="cantidad" type="number" class="form-control" placeholder="Cantidad">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary mt-2" (click)="agregarBebida()">Agregar Items</button>
+                          </div>
+
+                            
+                            
                             
                             
                               <div class="row mt-2 text-center">

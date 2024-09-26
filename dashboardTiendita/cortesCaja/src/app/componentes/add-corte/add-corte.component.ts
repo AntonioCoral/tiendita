@@ -1,11 +1,12 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TransferenciaService } from 'src/app/services/transferencia.service';
 import { CorteCajaService } from 'src/app/services/corte.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Transferencia, CorteCaja, Denominacion, Retiro, PagoTarjeta, PedidosTransitos } from 'src/app/interfaces/corte';
 import { Order } from 'src/app/interfaces/order';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-corte',
@@ -13,6 +14,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./add-corte.component.css']
 })
 export class AddCorteComponent implements OnInit {
+  corte: CorteCaja | null = null; // Corte cargado si es actualización
   nombre: string = '';
   numeroCaja: number = 0;
   totalEfectivo: number = 0;
@@ -51,6 +53,8 @@ export class AddCorteComponent implements OnInit {
     private orderService: OrderService,
     private router: Router,
     private datePipe: DatePipe,
+    private route: ActivatedRoute, // Para detectar si estamos en modo "editar"
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -175,12 +179,14 @@ export class AddCorteComponent implements OnInit {
       retiros: retirosCorte,
       pagosTarjeta: pagosTarjetaCorte,
       pedidosTransitos: pedidoTransitoCorte,
-      fecha: new Date()
+      fecha: new Date(),
+      totalCalculado: 0
     };
 
     this.corteService.crearCorte(cajaData).subscribe(
       response => {
         console.log('Corte creado:', response);
+        this.toastr.success(`Corte creado con éxito!!`);
         this.router.navigate(['/corte-caja']);
       },
       error => {

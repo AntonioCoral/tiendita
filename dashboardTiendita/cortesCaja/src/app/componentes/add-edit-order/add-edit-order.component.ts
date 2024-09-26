@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/services/order.service';
@@ -17,6 +17,8 @@ export class AddEditOrderComponent implements OnInit {
   loading: boolean = false;
   id: number;
   operacion: string = 'Agregar ';
+  showQuantity: boolean = false;  // Controla si se debe mostrar el campo de cantidad
+  selectedItem: string = '';
 
   constructor (
     private fb: FormBuilder,
@@ -35,7 +37,9 @@ export class AddEditOrderComponent implements OnInit {
       montoCompra: ['', Validators.required],
       transferenciaPay: [''],
       recharge: [''],
-      montoServicio: [{ value: '', disabled: true }] 
+      montoServicio: [{ value: '', disabled: true }],
+      bebidas: this.fb.array([]),  // FormArray de bebidas
+      itemOrder: ['']
     });
     this.id = Number(aRouter.snapshot.paramMap.get('id'));
   }
@@ -49,11 +53,36 @@ export class AddEditOrderComponent implements OnInit {
       this.generateRandomOrderNumber();
     }
   }
+
+  get bebidas(): FormArray {
+    return this.form.get('bebidas') as FormArray;
+  }
+
+  agregarBebida(): void {
+    const bebidaForm = this.fb.group({
+      nombre: [''],
+      cantidad: [{ value: '', disabled: true }]
+    });
+    this.bebidas.push(bebidaForm);
+  }
+
+  onBebidaChange(index: number): void {
+    const bebidaControl = this.bebidas.at(index).get('nombre');
+    const cantidadControl = this.bebidas.at(index).get('cantidad');
+
+    if (bebidaControl?.value === '') {
+      cantidadControl?.disable();
+      cantidadControl?.setValue('');
+    } else {
+      cantidadControl?.enable();
+    }
+  }
   
   getOrden(id: number) {
     this.loading = true;
     this._orderService.getOrder(id).subscribe((data: Order) => {
       this.loading = false;
+
       this.form.setValue({
         numerOrden: data.numerOrden,
         numeroCaja: data.numeroCaja,
@@ -63,9 +92,26 @@ export class AddEditOrderComponent implements OnInit {
         montoCompra: data.montoCompra,
         transferenciaPay: data.transferenciaPay,
         recharge: data.recharge,
-        montoServicio: data.montoServicio || ''
+        montoServicio: data.montoServicio || '',
+        itemOrder: data.itemOrder,
+        bebidas: []  // Reset the array, you'll need to load bebidas dynamically if needed
       });
     });
+  }
+  
+
+  onItemChange(event: Event): void {
+    const selectedItem = (event.target as HTMLSelectElement).value;
+    this.selectedItem = selectedItem;
+
+    if (selectedItem === 'none') {
+      this.showQuantity = false;
+      this.form.get('itemQuantity')?.setValue('');  // Limpiar cantidad
+      this.form.get('itemQuantity')?.disable();  // Deshabilitar campo de cantidad
+    } else {
+      this.showQuantity = true;
+      this.form.get('itemQuantity')?.enable();  // Habilitar campo de cantidad
+    }
   }
 
   generateRandomOrderNumber() {
@@ -86,6 +132,12 @@ export class AddEditOrderComponent implements OnInit {
         return;
     }
 
+    // Concatenar bebidas en itemOrder
+    const bebidasConcatenadas = this.form.value.bebidas
+      .filter((bebida: any) => bebida.nombre !== '') // Solo tomar bebidas seleccionadas
+      .map((bebida: any) => `${bebida.nombre} cantidad: ${bebida.cantidad}`)
+      .join(', ');
+
     const orden: Order = {
         numerOrden: this.form.value.numerOrden,
         numeroCaja: this.form.value.numeroCaja,
@@ -95,7 +147,8 @@ export class AddEditOrderComponent implements OnInit {
         montoCompra: this.form.value.montoCompra,
         transferenciaPay: this.form.value.transferenciaPay,
         recharge: this.form.value.recharge,
-        montoServicio: this.form.value.montoServicio
+        montoServicio: this.form.value.montoServicio,
+        itemOrder: bebidasConcatenadas  // Guardar bebidas concatenadas
     };
 
     const today = moment().format('YYYY-MM-DD');
@@ -132,6 +185,7 @@ export class AddEditOrderComponent implements OnInit {
       montoServicioControl?.enable();
     }
   }
+  
   
   
 }

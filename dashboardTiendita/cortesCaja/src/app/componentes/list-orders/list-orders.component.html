@@ -25,6 +25,7 @@
           <th scope="col">Repartidor</th>
           <th scope="col">Servicio</th>
           <th scope="col">Monto Servicio</th>
+          <th scope="col">Items</th>
           <th scope="col">Estatus</th>
           <th></th>
         </tr>
@@ -52,7 +53,7 @@
           <td>{{ item.recharge}}</td>
           <td *ngIf="item.montoServicio">{{ item.montoServicio | currency }}</td>
           <td *ngIf="!item.montoServicio">N/A</td>
-
+          <td>{{item.itemOrder}}</td>
           <td>
             <input 
               type="text" 

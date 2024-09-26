@@ -8,11 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUltimoCorteByCaja = exports.getTransferenciasByCajaAndDate = exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
+exports.actualizarCorte = exports.getUltimoCorteByCaja = exports.getTransferenciasByCajaAndDate = exports.actualizarPedidoTransito = exports.checkCajaNumberExists = exports.getLastCajaNumber = exports.getCortesByDate = exports.createCaja = void 0;
 const conecction_1 = __importDefault(require("../db/conecction"));
 const caja_1 = __importDefault(require("../models/caja"));
 const denominaciones_1 = __importDefault(require("../models/denominaciones"));
@@ -270,3 +281,104 @@ const getUltimoCorteByCaja = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.getUltimoCorteByCaja = getUltimoCorteByCaja;
+const actualizarCorte = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { corteId } = req.params;
+    const _a = req.body, { denominaciones, transferencias, retiros } = _a, otrosDatosCorte = __rest(_a, ["denominaciones", "transferencias", "retiros"]);
+    try {
+        // Primero, encontrar el corte por ID
+        const corte = yield caja_1.default.findByPk(corteId);
+        if (!corte) {
+            return res.status(404).json({ message: 'Corte no encontrado' });
+        }
+        // Actualizar los datos principales del corte (sin las denominaciones, transferencias y retiros)
+        yield corte.update(otrosDatosCorte);
+        // Actualizar las denominaciones
+        if (denominaciones && Array.isArray(denominaciones)) {
+            for (const denom of denominaciones) {
+                if (denom.id) {
+                    const denominacionExistente = yield denominaciones_1.default.findByPk(denom.id);
+                    if (denominacionExistente) {
+                        yield denominacionExistente.update({
+                            cantidad: denom.cantidad,
+                            denominacion: denom.denominacion.id,
+                        });
+                    }
+                }
+                else {
+                    yield denominaciones_1.default.create({
+                        cantidad: denom.cantidad,
+                        denominacion: denom.denominacion,
+                        cajaId: corte.id,
+                    });
+                }
+            }
+            const idsEnviados = denominaciones.map((denom) => denom.id);
+            yield denominaciones_1.default.destroy({
+                where: {
+                    cajaId: corte.id,
+                    id: { [sequelize_1.Op.notIn]: idsEnviados },
+                },
+            });
+        }
+        // Actualizar las transferencias
+        if (transferencias && Array.isArray(transferencias)) {
+            for (const trans of transferencias) {
+                if (trans.id) {
+                    const transferenciaExistente = yield transferencia_1.default.findByPk(trans.id);
+                    if (transferenciaExistente) {
+                        yield transferenciaExistente.update({
+                            monto: trans.monto,
+                        });
+                    }
+                }
+                else {
+                    yield transferencia_1.default.create({
+                        monto: trans.monto,
+                        cajaId: corte.id,
+                    });
+                }
+            }
+            const idsTransEnviados = transferencias.map((trans) => trans.id);
+            yield transferencia_1.default.destroy({
+                where: {
+                    cajaId: corte.id,
+                    id: { [sequelize_1.Op.notIn]: idsTransEnviados },
+                },
+            });
+        }
+        // Actualizar los retiros
+        if (retiros && Array.isArray(retiros)) {
+            for (const retiro of retiros) {
+                if (retiro.id) {
+                    const retiroExistente = yield retiros_1.default.findByPk(retiro.id);
+                    if (retiroExistente) {
+                        yield retiroExistente.update({
+                            monto: retiro.monto,
+                            descripcion: retiro.descripcion,
+                        });
+                    }
+                }
+                else {
+                    yield retiros_1.default.create({
+                        monto: retiro.monto,
+                        descripcion: retiro.descripcion,
+                        cajaId: corte.id,
+                    });
+                }
+            }
+            const idsRetirosEnviados = retiros.map((retiro) => retiro.id);
+            yield retiros_1.default.destroy({
+                where: {
+                    cajaId: corte.id,
+                    id: { [sequelize_1.Op.notIn]: idsRetirosEnviados },
+                },
+            });
+        }
+        res.status(200).json(corte);
+    }
+    catch (error) {
+        console.error('Error al actualizar el corte:', error);
+        res.status(500).json({ message: 'Error al actualizar el corte', error });
+    }
+});
+exports.actualizarCorte = actualizarCorte;

@@ -33,6 +33,9 @@ const Orden = db.define('Orden', {
     montoServicio: {
         type: DataTypes.DOUBLE
     },
+    itemOrder:{
+        type: DataTypes.STRING
+    },
     status: {
         type: DataTypes.STRING
     },

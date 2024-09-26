@@ -2,6 +2,11 @@ import { DataTypes } from 'sequelize';
 import db from '../db/conecction';
 
 const Denominaciones = db.define('Denominaciones', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   cajaId: {
     type: DataTypes.INTEGER,
     references: {
@@ -11,12 +16,11 @@ const Denominaciones = db.define('Denominaciones', {
   },
   denominacion: {
     type: DataTypes.STRING,
-    
   },
   cantidad: {
     type: DataTypes.INTEGER,
-   
   }
 });
+
 
 export default Denominaciones;

@@ -45,6 +45,9 @@ const Orden = conecction_1.default.define('Orden', {
     montoServicio: {
         type: sequelize_1.DataTypes.DOUBLE
     },
+    itemOrder: {
+        type: sequelize_1.DataTypes.STRING
+    },
     status: {
         type: sequelize_1.DataTypes.STRING
     },
