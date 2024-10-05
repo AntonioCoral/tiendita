@@ -21,6 +21,10 @@ export class EcommerceService {
     return this.http.post<ICategory>(`${this.apiUrl}/categories`, category);
   }
 
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/categories/${id}`);
+  }
+
   getProducts(): Observable<IProduct[]> {
     return this.http.get<IProduct[]>(`${this.apiUrl}/products`);
   }

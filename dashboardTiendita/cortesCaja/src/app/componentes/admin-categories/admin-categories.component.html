@@ -16,4 +16,20 @@
       </div>
     </div>
   </div>
+
+  <!-- src/app/components/list-categories/list-categories.component.html -->
+<div class="container mt-5">
+  <h2 class="text-center">Categorías</h2>
+  <div class="row">
+    <div *ngFor="let category of categories" class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ category.name }}</h5>
+          <button (click)="deleteCategory(category.id)" class="btn btn-danger w-100">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
   

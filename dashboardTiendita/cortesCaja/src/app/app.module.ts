@@ -63,7 +63,7 @@ import { EditProductsComponent } from './componentes/edit-products/edit-products
     HttpClientModule,
     BrowserAnimationsModule, 
     ToastrModule.forRoot({
-      timeOut: 5000,
+      timeOut: 3000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }), 
