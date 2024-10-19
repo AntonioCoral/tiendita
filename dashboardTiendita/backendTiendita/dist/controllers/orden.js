@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPedidosTransitoByCajaAndTimeRange = exports.getTransferenciasByCajaAndTimeRange = exports.checkOrderNumberExists = exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
+exports.getTotalEfectivoByOrderRange = exports.getPedidosTransitoByCajaAndTimeRange = exports.getTransferenciasByCajaAndTimeRange = exports.checkOrderNumberExists = exports.getLastOrderNumber = exports.getOrdenesByDate = exports.getOrdenesByDelivery = exports.updateOrden = exports.postOrden = exports.deleteOrden = exports.getOrden = exports.getOrdenes = void 0;
 const orden_1 = __importDefault(require("../models/orden"));
 const sequelize_1 = require("sequelize");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
@@ -256,3 +256,35 @@ const getPedidosTransitoByCajaAndTimeRange = (req, res) => __awaiter(void 0, voi
     }
 });
 exports.getPedidosTransitoByCajaAndTimeRange = getPedidosTransitoByCajaAndTimeRange;
+const getTotalEfectivoByOrderRange = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { rangoInicio, rangoFin } = req.query;
+    // Obtén la fecha actual
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    try {
+        console.log('Rango de órdenes:', rangoInicio, rangoFin);
+        console.log('Fecha inicio del día:', startOfDay);
+        console.log('Fecha fin del día:', endOfDay);
+        // Consulta para sumar el total de efectivo
+        const totalEfectivo = yield orden_1.default.sum('efectivo', {
+            where: {
+                numerOrden: {
+                    [sequelize_1.Op.between]: [rangoInicio, rangoFin]
+                },
+                createdAt: {
+                    [sequelize_1.Op.between]: [startOfDay, endOfDay]
+                }
+            }
+        });
+        console.log('Total efectivo calculado:', totalEfectivo);
+        res.json({
+            totalEfectivo: totalEfectivo || 0
+        });
+    }
+    catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ message: 'Error al obtener el total de efectivo', error });
+    }
+});
+exports.getTotalEfectivoByOrderRange = getTotalEfectivoByOrderRange;

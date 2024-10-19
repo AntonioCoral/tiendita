@@ -135,6 +135,34 @@
                       </div>
                     </div>
                   </div>
+                  <!-- Inputs para el rango de órdenes -->
+                    <div class="card mb-3">
+                      <div class="card-header">Efectivo por Rango de Órdenes</div>
+                      <div class="card-body">
+                        <div class="input-group mb-3">
+                          <span class="input-group-text input-group-text-small">Orden Inicial</span>
+                          <input type="number" class="form-control" [(ngModel)]="ordenInicial" name="ordenInicial" />
+                        </div>
+                        <div class="input-group mb-3">
+                          <span class="input-group-text input-group-text-small">Orden Final</span>
+                          <input type="number" class="form-control" [(ngModel)]="ordenFinal" name="ordenFinal" />
+                        </div>
+                        <button type="button" class="btn btn-primary" (click)="calcularEfectivoPorOrdenes()">Calcular Efectivo</button>
+                      </div>
+                    </div>
+
+                    <!-- Campo para mostrar el total de efectivo sumado -->
+                    <div class="card mb-3">
+                      <div class="card-header">Total Efectivo de Órdenes</div>
+                      <div class="card-body">
+                        <div class="input-group mb-3">
+                          <span class="input-group-text input-group-text-small">$</span>
+                          <input type="text" class="form-control" [value]="totalEfectivoOrdenes" readonly />
+                        </div>
+                        
+                      </div>
+                    </div>
+
                 </div>
 
                 <div class="card mb-3">

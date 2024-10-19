@@ -1,3 +1,4 @@
+import { EfectivoService } from './../../services/efectivo.service';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransferenciaService } from 'src/app/services/transferencia.service';
@@ -25,6 +26,10 @@ export class AddCorteComponent implements OnInit {
   ventaTotal: number = 0;
   recargas: number = 0;
   ultimoCorte: CorteCaja | null = null;//Almacena el ultimo corte de la caja
+  ordenInicial: number = 0;
+  ordenFinal: number = 0;
+  totalEfectivoOrdenes: number = 0;
+
   denominaciones: Denominacion[] = [
     { denominacion: 1000, cantidad: 0 },
     { denominacion: 500, cantidad: 0 },
@@ -50,6 +55,7 @@ export class AddCorteComponent implements OnInit {
   constructor(
     private corteService: CorteCajaService,
     private transferenciaService: TransferenciaService,
+    private efectivoService: EfectivoService,
     private orderService: OrderService,
     private router: Router,
     private datePipe: DatePipe,
@@ -110,7 +116,21 @@ export class AddCorteComponent implements OnInit {
       }
     );
   }
-
+   // Método para calcular el total de efectivo en un rango de órdenes
+   calcularEfectivoPorOrdenes(): void {
+    if (this.ordenInicial > 0 && this.ordenFinal > 0 && this.ordenFinal >= this.ordenInicial) {
+      this.efectivoService.obtenerTotalEfectivoPorRango(this.ordenInicial, this.ordenFinal).subscribe(
+        (response: any) => {
+          // Accede a la propiedad 'totalEfectivo'
+          this.totalEfectivoOrdenes = response.totalEfectivo;
+        },
+        (error) => {
+          console.error('Error al obtener el total de efectivo:', error);
+        }
+      );
+    }
+  }
+  
   onNumeroCajaChange(): void {
     this.cargarTransferencias();
     this.cargarPedidosTransito();

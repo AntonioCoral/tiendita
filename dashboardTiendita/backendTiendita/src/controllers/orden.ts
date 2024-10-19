@@ -255,3 +255,41 @@ export const getPedidosTransitoByCajaAndTimeRange = async (req: Request, res: Re
         res.status(500).json({ msg: 'Error fetching pedidos en transito' });
     }
 };
+
+export const getTotalEfectivoByOrderRange = async (req: Request, res: Response) => {
+    const { rangoInicio, rangoFin } = req.query;
+
+    // Obtén la fecha actual
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    try {
+        console.log('Rango de órdenes:', rangoInicio, rangoFin);
+        console.log('Fecha inicio del día:', startOfDay);
+        console.log('Fecha fin del día:', endOfDay);
+
+        // Consulta para sumar el total de efectivo
+        const totalEfectivo = await Orden.sum('efectivo', {
+            where: {
+                numerOrden: {
+                    [Op.between]: [rangoInicio, rangoFin]
+                },
+                createdAt: {
+                    [Op.between]: [startOfDay, endOfDay]
+                }
+            }
+        });
+
+        console.log('Total efectivo calculado:', totalEfectivo);
+
+        res.json({ 
+            totalEfectivo: totalEfectivo || 0
+        });
+    } catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ message: 'Error al obtener el total de efectivo', error });
+    }
+};
+
+
