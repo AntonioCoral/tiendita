@@ -12,6 +12,8 @@ export class SocketService {
 
   constructor() {
     this.socket = io(environment.endpoint, {
+      path: '/socket.io',
+      transports: ['websocket','polling'],
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
