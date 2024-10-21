@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const http_1 = __importDefault(require("http"));
+const https_1 = __importDefault(require("https")); // Asegúrate de importar https en lugar de http
 const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -22,19 +22,24 @@ const orden_1 = __importDefault(require("../routes/orden"));
 const cliente_1 = __importDefault(require("../routes/cliente"));
 const caja_1 = __importDefault(require("../routes/caja"));
 const _1 = require(".");
+const fs_1 = __importDefault(require("fs"));
 dotenv_1.default.config();
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '500';
-        this.server = http_1.default.createServer(this.app);
+        // Cargar el certificado SSL
+        const options = {
+            key: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
+            cert: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem') // Ruta del certificado
+        };
+        // Crear servidor HTTPS
+        this.server = https_1.default.createServer(options, this.app);
         this.io = new socket_io_1.Server(this.server, {
             path: '/socket.io',
             transports: ['websocket', 'polling'],
             cors: {
-                origin: [
-                    '*'
-                ],
+                origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
             },
         });

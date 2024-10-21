@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import https from 'http';
+import https from 'https'; // Asegúrate de importar https en lugar de http
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -23,16 +23,20 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || '500';
 
-        
+        // Cargar el certificado SSL
+        const options = {
+            key: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
+            cert: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem') // Ruta del certificado
+        };
 
-        this.server = https.createServer( this.app);
+        // Crear servidor HTTPS
+        this.server = https.createServer(options, this.app);
+
         this.io = new SocketIOServer(this.server, {
             path: '/socket.io',
-            transports: ['websocket','polling'],
-                cors: {
-                origin: [
-                    '*'
-                ],
+            transports: ['websocket', 'polling'],
+            cors: {
+                origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
             },
         });
@@ -48,10 +52,10 @@ class Server {
     }
 
     listen() {
-        syncDatabase().then(() =>{
+        syncDatabase().then(() => {
             this.server.listen(this.port, () => {
                 console.log('Aplicación corriendo en el puerto:', this.port);
-        })
+            });
         });
     }
 
@@ -63,7 +67,7 @@ class Server {
         // Pasar io como parte del contexto a las rutas
         this.app.use('/api/ordenes', routesOrden(this.io));
         this.app.use('/api/clientes', routesCliente);
-        this.app.use('/api/caja', routesCaja)
+        this.app.use('/api/caja', routesCaja);
     }
 
     middlewares() {
