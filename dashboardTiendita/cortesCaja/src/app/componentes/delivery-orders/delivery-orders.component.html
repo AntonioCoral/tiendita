@@ -9,17 +9,21 @@
           <th scope="col">Total</th>
           <th scope="col">Transferencia</th>
           <th scope="col">Efectivo</th>
-
+          <th scope="col">Acción</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let order of orders" class="table-secondary">
           <td>{{ order.nameClient }}</td>
-          <td>{{ order.direction }}</td>
+          <td>{{ order.direction}}</td>
           <td>{{ order.montoCompra | currency }}</td>
           <td>{{ order.transferenciaPay | currency }}</td>
           <td>{{ order.efectivo | currency }}</td>
-
+          <td>
+            <button class="btn btn-primary" (click)="openInGoogleMaps(order.direction)">
+              Abrir en Google Maps
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

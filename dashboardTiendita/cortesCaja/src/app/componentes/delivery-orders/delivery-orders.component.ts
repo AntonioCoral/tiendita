@@ -78,4 +78,9 @@ export class DeliveryOrdersComponent implements OnInit, OnDestroy {
            orderDate.getMonth() === today.getMonth() &&
            orderDate.getFullYear() === today.getFullYear();
   }
+
+  openInGoogleMaps(direction: string): void {
+    window.open(direction, '_blank');
+  }
+  
 }

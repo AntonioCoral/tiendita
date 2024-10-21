@@ -30,7 +30,10 @@ class Server {
         this.server = http_1.default.createServer(this.app);
         this.io = new socket_io_1.Server(this.server, {
             cors: {
-                origin: '*',
+                origin: [
+                    'http://localhost:4200',
+                    'https://xn--toocode-5za.com'
+                ],
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
             },
         });

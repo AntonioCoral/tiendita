@@ -8,3 +8,31 @@ body {
     height: 100%; /* Ajusta la altura al 100% */
     overflow-y: auto; /* Permite el scroll vertical cuando sea necesario */
 }
+
+/* Estilos para el toastr de éxito */
+.toast-success {
+    background-color: #28a745 !important; /* Color verde más intenso */
+    color: white !important;
+  }
+  
+  /* Estilos para la barra de progreso */
+  .toast-success .toast-progress {
+    background-color: white !important;
+  }
+  
+  /* Estilos para el toastr de error */
+  .toast-error {
+    background-color: #dc3545 !important; /* Color rojo más intenso */
+    color: white !important;
+  }
+  
+  /* Estilos generales para la barra de progreso en todas las notificaciones */
+  .toast .toast-progress {
+    background-color: white !important;
+  }
+  
+  /* Estilos para el botón de cierre */
+  .toast .toast-close-button {
+    color: white !important;
+  }
+  

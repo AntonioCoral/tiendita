@@ -63,9 +63,11 @@ import { EditProductsComponent } from './componentes/edit-products/edit-products
     HttpClientModule,
     BrowserAnimationsModule, 
     ToastrModule.forRoot({
-      timeOut: 3000,
-      positionClass: 'toast-bottom-right',
+      timeOut: 1000,
+      positionClass: 'toast-top-right',
       preventDuplicates: true,
+      progressBar: true, // Activa la barra de progreso si la otra aplicación la tiene
+      progressAnimation: 'increasing', // Puedes cambiar a 'decreasing' según tu preferencia
     }), 
     ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
