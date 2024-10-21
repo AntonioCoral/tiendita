@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import http from 'http';
+import https from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -14,13 +14,13 @@ dotenv.config();
 class Server {
     private app: express.Application;
     private port: string;
-    private server: http.Server;
+    private server: https.Server;
     private io: SocketIOServer;
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '500';
-        this.server = http.createServer(this.app);
+        this.server = https.createServer(this.app);
         this.io = new SocketIOServer(this.server, {
             path: '/socket.io',
             wsEngine: ['ws','wss'],
