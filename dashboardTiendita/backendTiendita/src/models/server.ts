@@ -8,6 +8,8 @@ import routesOrden from '../routes/orden';
 import routesCliente from '../routes/cliente';
 import routesCaja from '../routes/caja';
 import { syncDatabase } from '.';
+import fs from 'fs';
+
 
 dotenv.config();
 
@@ -20,10 +22,12 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '500';
-        this.server = https.createServer(this.app);
+
+        
+
+        this.server = https.createServer( this.app);
         this.io = new SocketIOServer(this.server, {
             path: '/socket.io',
-            wsEngine: ['ws','wss'],
             transports: ['websocket','polling'],
                 cors: {
                 origin: [

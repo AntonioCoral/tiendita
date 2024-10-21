@@ -30,7 +30,6 @@ class Server {
         this.server = http_1.default.createServer(this.app);
         this.io = new socket_io_1.Server(this.server, {
             path: '/socket.io',
-            wsEngine: ['ws', 'wss'],
             transports: ['websocket', 'polling'],
             cors: {
                 origin: [
