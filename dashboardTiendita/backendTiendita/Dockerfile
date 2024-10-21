@@ -16,6 +16,9 @@ RUN npm install -g typescript
 # Copia el resto de los archivos del proyecto
 COPY . .
 
+# Copia los certificados SSL desde el host a la imagen del contenedor
+COPY /etc/letsencrypt/live/codeconnectivity.com /etc/letsencrypt/live/codeconnectivity.com
+
 # Compila el proyecto TypeScript
 RUN npm run build
 
