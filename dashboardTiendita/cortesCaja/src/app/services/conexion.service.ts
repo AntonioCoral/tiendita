@@ -1,3 +1,4 @@
+import { Cliente } from './../interfaces/cliente';
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
@@ -12,13 +13,14 @@ export class SocketService {
 
   constructor() {
     this.socket = io(environment.endpoint, {
-      path: '/socket.io',
-      transports: ['websocket','polling'],
+      
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       timeout: 20000,
+      forceNew: true,
+      withCredentials: true
     });
 
     this.socket.on('connect', () => {

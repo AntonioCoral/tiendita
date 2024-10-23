@@ -31,7 +31,7 @@ class Server {
         // Cargar el certificado SSL
         const options = {
             key: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem') // Ruta del certificado
+            cert: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
         };
         // Crear servidor HTTPS
         this.server = https_1.default.createServer(options, this.app);
@@ -39,8 +39,9 @@ class Server {
             path: '/socket.io',
             transports: ['websocket', 'polling'],
             cors: {
-                origin: '*',
+                origin: 'http://localhost:4200',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
+                credentials: true
             },
         });
         // Agregar io al contexto de la aplicación

@@ -26,7 +26,8 @@ class Server {
         // Cargar el certificado SSL
         const options = {
             key: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem') // Ruta del certificado
+            cert: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
+            
         };
 
         // Crear servidor HTTPS
@@ -36,8 +37,9 @@ class Server {
             path: '/socket.io',
             transports: ['websocket', 'polling'],
             cors: {
-                origin: '*',
+                origin: 'http://localhost:4200',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
+                credentials: true
             },
         });
 
