@@ -22,24 +22,16 @@ const orden_1 = __importDefault(require("../routes/orden"));
 const cliente_1 = __importDefault(require("../routes/cliente"));
 const caja_1 = __importDefault(require("../routes/caja"));
 const _1 = require(".");
-const fs_1 = __importDefault(require("fs"));
 dotenv_1.default.config();
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '500';
-        // Cargar el certificado SSL
-        const options = {
-            key: fs_1.default.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs_1.default.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
-        };
         // Crear servidor HTTPS
-        this.server = https_1.default.createServer(options, this.app);
+        this.server = https_1.default.createServer(this.app);
         this.io = new socket_io_1.Server(this.server, {
-            path: '/socket.io',
-            transports: ['websocket', 'polling'],
             cors: {
-                origin: 'http://localhost:4200',
+                origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
                 credentials: true
             },

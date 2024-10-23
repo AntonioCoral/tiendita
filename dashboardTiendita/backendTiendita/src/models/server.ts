@@ -29,10 +29,9 @@ class Server {
         this.server = https.createServer( this.app);
 
         this.io = new SocketIOServer(this.server, {
-            path: '/socket.io',
-            transports: ['websocket', 'polling'],
+        
             cors: {
-                origin: 'http://localhost:4200',
+                origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'],
                 credentials: true
             },
