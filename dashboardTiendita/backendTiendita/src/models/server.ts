@@ -23,15 +23,10 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || '500';
 
-        // Cargar el certificado SSL
-        const options = {
-            key: fs.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
-            
-        };
+       
 
         // Crear servidor HTTPS
-        this.server = https.createServer(options, this.app);
+        this.server = https.createServer( this.app);
 
         this.io = new SocketIOServer(this.server, {
             path: '/socket.io',
