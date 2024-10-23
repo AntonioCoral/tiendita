@@ -30,8 +30,8 @@ class Server {
         this.port = process.env.PORT || '500';
         // Cargar el certificado SSL
         const options = {
-            key: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs_1.default.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
+            key: fs_1.default.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
+            cert: fs_1.default.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
         };
         // Crear servidor HTTPS
         this.server = https_1.default.createServer(options, this.app);

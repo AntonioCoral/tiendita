@@ -25,8 +25,8 @@ class Server {
 
         // Cargar el certificado SSL
         const options = {
-            key: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
-            cert: fs.readFileSync('/etc/letsencrypt/live/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
+            key: fs.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/privkey.pem'), // Ruta de la clave privada
+            cert: fs.readFileSync('/etc/letsencrypt/archive/codeconnectivity.com/fullchain.pem'), // Ruta del certificado
             
         };
 
