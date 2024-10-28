@@ -13,13 +13,17 @@ export class SocketService {
 
   constructor() {
     this.socket = io(environment.endpoint, {
-      
+      path: '/socket.io',
+        transports: ['websocket', 'polling'],
+        secure: true,
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       timeout: 20000,
       forceNew: true,
+     
+        
       
     });
 
