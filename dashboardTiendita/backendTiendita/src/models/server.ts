@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import https from 'https'; // Asegúrate de importar https en lugar de http
+import http from 'http'; // Asegúrate de importar https en lugar de http
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -16,7 +16,7 @@ dotenv.config();
 class Server {
     private app: express.Application;
     private port: string;
-    private server: https.Server;
+    private server: http.Server;
     private io: SocketIOServer;
 
     constructor() {
@@ -26,14 +26,12 @@ class Server {
        
 
         // Crear servidor HTTPS
-        this.server = https.createServer( this.app);
+        this.server = http.createServer( this.app);
 
         this.io = new SocketIOServer(this.server, {
         
             cors: {
-                origin: '*',
-                methods: ['GET', 'POST', 'PUT', 'DELETE'],
-                credentials: true
+                origin: '*',            
             },
         });
 

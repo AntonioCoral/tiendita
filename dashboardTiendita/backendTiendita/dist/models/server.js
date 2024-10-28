@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const https_1 = __importDefault(require("https")); // Asegúrate de importar https en lugar de http
+const http_1 = __importDefault(require("http")); // Asegúrate de importar https en lugar de http
 const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -28,12 +28,10 @@ class Server {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '500';
         // Crear servidor HTTPS
-        this.server = https_1.default.createServer(this.app);
+        this.server = http_1.default.createServer(this.app);
         this.io = new socket_io_1.Server(this.server, {
             cors: {
                 origin: '*',
-                methods: ['GET', 'POST', 'PUT', 'DELETE'],
-                credentials: true
             },
         });
         // Agregar io al contexto de la aplicación
