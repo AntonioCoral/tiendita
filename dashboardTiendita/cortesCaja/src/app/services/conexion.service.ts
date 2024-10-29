@@ -12,9 +12,9 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('https://codeconnectivity.com/socket.io', {
-      
-        transports: ['websocket', 'polling'],
+    this.socket = io('https://codeconnectivity.com/api', {
+      path: '/socket.io',
+        transports: ['websocket'],
         secure: true,
       reconnection: true,
       reconnectionAttempts: Infinity,
