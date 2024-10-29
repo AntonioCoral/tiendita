@@ -12,8 +12,8 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io(environment.endpoint, {
-      path: '/socket.io',
+    this.socket = io('https://codeconnectivity.com/socket.io', {
+      
         transports: ['websocket', 'polling'],
         secure: true,
       reconnection: true,
