@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    endpoint: 'https://codeconnectivity.com/api/'
+    endpoint: 'http://86.38.203.16:500/'
 };

@@ -8,7 +8,7 @@ import { CorteCaja, PedidosTransitos } from '../interfaces/corte';
   providedIn: 'root'
 })
 export class CorteCajaService {
-  private apiUrl = 'https://codeconnectivity.com/api/';
+  private apiUrl = 'http://86.38.203.16:500/api/caja/';
 
   constructor(private http: HttpClient) {}
 

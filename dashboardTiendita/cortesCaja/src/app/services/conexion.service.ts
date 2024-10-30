@@ -12,10 +12,8 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('https://codeconnectivity.com/api', {
-      path: '/socket.io',
-        transports: ['websocket','polling'],
-        secure: true,
+    this.socket = io('http://86.38.203.16:500/', {
+    
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
