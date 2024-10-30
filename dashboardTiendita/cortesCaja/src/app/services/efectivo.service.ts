@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EfectivoService {
-  private apiUrl = 'http://86.38.203.16:500/';  // Reemplaza con tu URL de API
+  private apiUrl = 'http://89.116.50.243:500/';  // Reemplaza con tu URL de API
 
   constructor(private http: HttpClient) {}
 

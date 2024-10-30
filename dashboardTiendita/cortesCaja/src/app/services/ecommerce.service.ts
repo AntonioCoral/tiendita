@@ -7,9 +7,9 @@ import { IProduct, ICategory, IProductOption } from '../interfaces/interface';
   providedIn: 'root'
 })
 export class EcommerceService {
-  
 
-  private apiUrl = 'http://86.38.203.16:500/'; // Reemplaza esto con la URL real de tu API
+
+  private apiUrl = 'http://89.116.50.243:500/'; // Reemplaza esto con la URL real de tu API
 
   constructor(private http: HttpClient) { }
 
