@@ -20,6 +20,8 @@ export class SocketService {
       reconnectionDelayMax: 5000,
       timeout: 20000,
       forceNew: true,
+      transports: ['websocket'],  // Solo WebSocket
+      secure: true
       
      
         
