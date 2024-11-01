@@ -12,7 +12,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://86.38.203.16:500/', {
+    this.socket = io('https://86.38.203.16:500/', {
       path: '/socket.io',
       reconnection: true,
       reconnectionAttempts: Infinity,
