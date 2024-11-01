@@ -17,6 +17,7 @@ export class OrderService {
     this.myAppUrl = environment.endpoint;
     this.myApiUrl = 'api/ordenes/';
     this.socket = io(`${this.myAppUrl}${this.myApiUrl}`);
+    
   }
 
   
