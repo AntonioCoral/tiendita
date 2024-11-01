@@ -12,7 +12,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://89.116.50.243:500/', {
+    this.socket = io('http://86.38.203.16:500/', {
     
       reconnection: true,
       reconnectionAttempts: Infinity,
