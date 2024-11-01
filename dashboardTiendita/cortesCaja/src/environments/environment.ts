@@ -1,5 +1,5 @@
 
 export const environment = {
     production: true,
-    endpoint: 'https://codeconnectivity.com/'
+    endpoint: 'https://codeconnectivity.com/api/'
 };
