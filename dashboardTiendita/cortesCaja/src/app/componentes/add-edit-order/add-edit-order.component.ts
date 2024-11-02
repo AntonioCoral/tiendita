@@ -45,12 +45,27 @@ export class AddEditOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Suscríbete a los parámetros de la URL
+  this.aRouter.queryParams.subscribe(params => {
+    console.log("Parámetros recibidos:", params);  // Para depuración
+
+    // Asigna los valores obtenidos de los parámetros al formulario
+    this.form.patchValue({
+      nameClient: params['nombre'] || '',
+      direction: params['direction'] || ''
+     
+    });
+
+    console.log("Datos del formulario después de asignar parámetros:", this.form.value);  // Verificar datos en formulario
+  });
     if (this.id != 0) {
       this.operacion = 'Editar ';
       this.getOrden(this.id);
     } else {
       // Generar número de orden aleatorio
       this.generateRandomOrderNumber();
+      console.log("Datos del cliente:", this.form.value);
+
     }
   }
 

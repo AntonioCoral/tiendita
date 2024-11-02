@@ -14,7 +14,6 @@
     <p><strong>Nombre:</strong> {{ foundClient.nombre }}</p>
     <p><strong>Apellido:</strong> {{ foundClient.apellido }}</p>
     <p><strong>Dirección:</strong> {{ foundClient.direction }}</p>
-    <p><strong>Teléfono:</strong> {{ foundClient.telefono }}</p>
     <button class="btn btn-success" (click)="goToAddOrder()">Agregar Orden</button>
   </div>
 
@@ -25,7 +24,6 @@
         <input type="text" id="newName" formControlName="nombre" class="form-control mb-2" placeholder="Nombre" required>
         <input type="text" id="newApellido" formControlName="apellido" class="form-control mb-2" placeholder="Apellido" required>
         <input type="text" id="newDirection" formControlName="direction" class="form-control mb-2" placeholder="Dirección" required>
-        <input type="text" id="newPhone" formControlName="telefono" class="form-control mb-2" placeholder="Teléfono" required>
       </div>
       <button type="submit" class="btn btn-primary">Agregar Cliente</button>
     </form>

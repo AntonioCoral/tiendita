@@ -26,7 +26,7 @@ export class ClientesComponent {
       nombre: '',
       apellido: '',
       direction: '',
-      telefono: ''
+    
     });
   }
 
@@ -72,6 +72,14 @@ export class ClientesComponent {
   }
 
   goToAddOrder() {
-    this.router.navigate(['/add'], { queryParams: this.foundClient });
+    this.router.navigate(['/add'], {
+      queryParams: {
+        id: this.foundClient.id,
+        nombre: this.foundClient.nombre,
+        direction: this.foundClient.direction,
+        
+      }
+    
+    });
   }
 }

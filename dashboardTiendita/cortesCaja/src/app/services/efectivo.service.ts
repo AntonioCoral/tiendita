@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EfectivoService {
-  private apiUrl = 'https://codeconnectivity.com/api/';  // Reemplaza con tu URL de API
+  private apiUrl = 'https://codeconnectivity.com/api/api/';  // Reemplaza con tu URL de API
 
   constructor(private http: HttpClient) {}
 

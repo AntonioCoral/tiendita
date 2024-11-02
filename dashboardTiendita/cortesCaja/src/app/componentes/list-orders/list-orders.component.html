@@ -48,7 +48,7 @@
               class="form-control" 
               placeholder="{{ item.nameDelivery }}"
               id="repartidor"
-              (keyup.enter)="updateRepartidor(item.id, getInputValue($event))"
+              (blur)="updateRepartidor(item.id, getInputValue($event))"
               *ngIf="item.id !== undefined">
           </td>
           <td>{{ item.recharge}}</td>
@@ -61,7 +61,7 @@
               class="form-control" 
               placeholder="{{ item.status }}"
               id="status"
-              (keyup.enter)="updateEstadoPedido(item.id, getInputValue($event))"
+              (blur)="updateEstadoPedido(item.id, getInputValue($event))"
               *ngIf="item.id !== undefined">
           </td>
           <td>
