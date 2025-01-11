@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('u700514341_tienditaDB', 'u700514341_tiendita', 'QXHwGzM5d2pc#TV', {
-  host: 'srv1294.hstgr.io',
+const sequelize = new Sequelize('u350903543_superdb', 'u350903543_userdb', '0:#Fd7]Ru', {
+  host: 'srv1780.hstgr.io',
   dialect: 'mysql'
 });
 sequelize.authenticate();

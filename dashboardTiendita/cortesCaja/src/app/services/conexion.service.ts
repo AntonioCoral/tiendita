@@ -12,7 +12,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('https://codeconnectivity.com/', {
+    this.socket = io('https://supertiendita24hr.com/', {
       path: '/socket.io',
       reconnection: true,
       reconnectionAttempts: Infinity,

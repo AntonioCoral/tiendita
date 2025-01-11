@@ -1,5 +1,5 @@
 
 export const environment = {
     production: true,
-    endpoint: 'https://codeconnectivity.com/api/'
+    endpoint: 'https://supertiendita24hr.com/api/'
 };

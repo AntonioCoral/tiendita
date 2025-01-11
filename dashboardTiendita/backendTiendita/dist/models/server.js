@@ -77,8 +77,8 @@ class Server {
     sockets() {
         this.io.on('connection', (socket) => {
             console.log('Usuario conectado');
-            socket.on('disconnect', () => {
-                console.log('Usuario desconectado');
+            socket.on('disconnect', (reason) => {
+                console.log(`User disconnected: ${reason}`);
             });
         });
     }
